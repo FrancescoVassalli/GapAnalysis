@@ -16,6 +16,52 @@
         "8000"
       ],
       "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Develop Website",
+      "cwd": "${workspaceFolder}/ui",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Build Website",
+      "cwd": "${workspaceFolder}/ui",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "build"
+      ],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Preview Built Website",
+      "cwd": "${workspaceFolder}/ui",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "preview"
+      ],
+      "console": "integratedTerminal"
     }
   ],
+  "compounds": [
+    {
+      "name": "Run API and Dev Website",
+      "configurations": ["Run Uvicorn", "Develop Website"],
+    },
+    {
+      "name": "Build and Preview Website",
+      "configurations": ["Build Website", "Preview Built Website"]
+    }
+  ]
 }
