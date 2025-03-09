@@ -6,7 +6,7 @@ import uvicorn
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from db import Database
 import ana
 
 logger = logging.getLogger("Main")
@@ -72,6 +72,9 @@ else:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+db = Database()
+app.state.db = db
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0")
