@@ -1,9 +1,13 @@
 import json
 from typing import Collection, List
 
+from openai import OpenAI
 from sqlmodel import Session, select
 
+from google_reasoning_interface import complete_summary as google_complete_summary
 from models import Bait, ChatHistory
+
+client = OpenAI()
 
 
 def adapt_chat_history_to_paragraph(chat: ChatHistory) -> str:
@@ -35,4 +39,39 @@ def summarize(session: Session, baits: Collection[int] = None):
         )
         for bait_id in baits
     ]
-    return json.dumps(chat_paragraphs)
+    return complete_summary(chat_paragraphs)
+
+
+def complete_summary(chats: List[str]) -> str:
+    # use google instead
+    # completion = client.chat.completions.create(
+    # model="gpt-4o",
+    # messages=[
+    # {
+    # "role": "system",
+    # "content": [
+    # {
+    # "type": "text",
+    # "text": MAKE_SUMMARY_TEXT,
+    # }
+    # ],
+    # },
+    # {
+    # "role": "user",
+    # "content": [
+    # {
+    # "type": "text",
+    # "text": json.dumps(chats),
+    # }
+    # ],
+    # },
+    # ],
+    # response_format={"type": "text"},
+    # temperature=1,
+    # max_completion_tokens=2048,
+    # top_p=1,
+    # frequency_penalty=0,
+    # presence_penalty=0,
+    # )
+    # return completion.choices[0].message.content
+    return google_complete_summary(chats)
