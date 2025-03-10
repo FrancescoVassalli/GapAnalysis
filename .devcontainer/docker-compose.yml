@@ -1,0 +1,39 @@
+services:
+  python-dev:
+    container_name: "python-dev"
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        INSTALL_NODE: ${INSTALL_NODE:-false}
+    env_file:
+      - ../.env
+    environment:
+      GIT_EDITOR: "code --wait"
+    ports:
+      - "8000:8000"
+      - "3000:3000"
+    volumes:
+      - ..:/app:cached
+      - ~/.ssh:/root/.ssh:ro
+      - ~/.gitconfig:/root/.gitconfig:ro
+
+  gap-postgres:
+    image: postgres:15
+    container_name: gap-postgres
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD-password}"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../gap_postgres_data/:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: "gap-postgres"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../adminer-data:/var/lib/adminer

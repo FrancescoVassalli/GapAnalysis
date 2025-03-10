@@ -76,3 +76,7 @@ Inside the Debug side bar you can Launch the services defined in [`.vscode/launc
 - `Run Uvicorn`: Launches the FastAPI server
 
 >Alternatively you can run `poetry run uvicorn main:app --host 0.0.0.0 --port 8000 --reload` in the integrated terminal
+
+### Setting up database
+
+Run this command in the dev container to write the schema to the 
