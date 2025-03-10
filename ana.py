@@ -9,6 +9,7 @@ from phish_interface import (
     target_homepage_dict,
 )
 from interview_interface import begin_interview, continue_interview
+from summary_interface import collect_chats_in_paragraph_format, summarize
 from typing import List
 from sqlmodel import delete, select
 logger = logging.getLogger('router')
@@ -74,3 +75,15 @@ async def start_chat(request: Request, bait_id: int, user_message:str) -> str:
         session.add(new_ai_chat)
         session.commit()
         return new_ai_message
+    
+@router.get("/all-bait-chat/{bait_id}")
+async def start_chat(request: Request, bait_id: int) -> str:
+    db: Database = request.app.state.db
+    with db.get_session() as session:
+        return collect_chats_in_paragraph_format(session,bait_id)
+    
+@router.get("/summary")
+async def start_chat(request: Request) -> str:
+    db: Database = request.app.state.db
+    with db.get_session() as session:
+        return summarize(session)
