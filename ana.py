@@ -9,10 +9,6 @@ from sqlmodel import delete, select
 
 from db import Database
 from interview_interface import begin_interview, continue_interview
-from sqlmodel import delete, select
-
-from db import Database
-from interview_interface import begin_interview, continue_interview
 from models import Bait, ChatHistory, Sender
 from phish_interface import (
     complete_email_html,
@@ -30,7 +26,6 @@ router = APIRouter(
     tags=["mock"],
     responses={404: {"description": "Not found"}},
 )
-
 
 class LinkedInPageResponse(BaseModel):
     content: str
@@ -172,18 +167,25 @@ async def get_chats(request: Request):
         ]
         return all_chats
 
-        return new_ai_message
+class AllBaitChatResponse(BaseModel):
+  content: str
 
 
-@router.get("/all-bait-chat/{bait_id}")
-async def get_all_chats_for_bait(request: Request, bait_id: int) -> str:
-    db: Database = request.app.state.db
-    with db.get_session() as session:
-        return collect_chats_in_paragraph_format(session, bait_id)
+@router.get("/all-bait-chat/{bait_id}", response_model=AllBaitChatResponse)
+async def get_all_chats_for_bait(request: Request, bait_id: int) -> AllBaitChatResponse:
+  db: Database = request.app.state.db
+  with db.get_session() as session:
+    content = collect_chats_in_paragraph_format(session, bait_id)
+    return AllBaitChatResponse(content=content)
 
 
-@router.get("/summary")
-async def get_summary(request: Request) -> str:
-    db: Database = request.app.state.db
-    with db.get_session() as session:
-        return summarize(session)
+class SummaryResponse(BaseModel):
+  summary: str
+
+
+@router.get("/summary", response_model=SummaryResponse)
+async def get_summary(request: Request) -> SummaryResponse:
+  db: Database = request.app.state.db
+  with db.get_session() as session:
+    summary = summarize(session)
+    return SummaryResponse(summary=summary)
