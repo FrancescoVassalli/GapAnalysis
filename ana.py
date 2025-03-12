@@ -29,6 +29,13 @@ async def fetch_linkedin_page(request: Request, url: str):
     return request_linkedin_html(url)
 
 
+@router.get("/valid-targets/")
+async def bait(request: Request) -> List[str]:
+    target_names = list(target_homepage_dict.keys())
+    target_names.remove('jeremy')
+    return target_names
+
+
 @router.get("/bait/{target_name}")
 async def bait(request: Request, target_name: str):
     content = create_bait(target_name)
