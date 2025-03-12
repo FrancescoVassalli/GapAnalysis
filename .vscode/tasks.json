@@ -1,0 +1,56 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "generate-client",
+      "type": "shell",
+      "command": "npm run generate-client",
+      "options": {
+        "cwd": "${workspaceFolder}/ui"
+      },
+      "problemMatcher": [],
+      "isBackground": false,
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      }
+    },
+    {
+      "label": "build-website",
+      "type": "shell",
+      "command": "npm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/ui"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "preview-website",
+      "type": "shell",
+      "command": "npm run preview",
+      "options": {
+        "cwd": "${workspaceFolder}/ui"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "prepare-client-and-build",
+      "dependsOn": [
+        "generate-client",
+        "build-website"
+      ],
+      "dependsOrder": "sequence"
+    },
+    {
+      "label": "prepare-client-and-preview",
+      "dependsOn": [
+        "generate-client",
+        "build-website",
+        "preview-website"
+      ],
+      "dependsOrder": "sequence"
+    }
+  ]
+}
