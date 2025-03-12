@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { FC, useState } from "react";
+import TargetButton from "./TargetButton";
 
 const fetchValidTargets = async (): Promise<string[]> => {
     const { data } = await axios.get("http://localhost:8000/mock/valid-targets");
@@ -27,7 +28,7 @@ const CreateBait: FC = ()=>{
             {showTargets && (
                 <ul>
                     {validTargets?.map((target, index) => (
-                      <li key={index}>{target}</li>
+                      <li key={index}><TargetButton target_name={target}/></li>
                     ))}
                 </ul>
             )}

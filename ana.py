@@ -30,10 +30,17 @@ async def fetch_linkedin_page(request: Request, url: str):
 
 
 @router.get("/valid-targets/")
-async def bait(request: Request) -> List[str]:
+async def valid_targets(request: Request) -> List[str]:
     target_names = list(target_homepage_dict.keys())
     target_names.remove('jeremy')
     return target_names
+
+
+@router.get("/active-baits/")
+async def get_active_baits(request: Request) -> List[Bait]:
+    db: Database = request.app.state.db
+    with db.get_session() as session:
+        return session.exec(select(Bait)).all()
 
 
 @router.get("/bait/{target_name}")
