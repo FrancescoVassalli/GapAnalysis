@@ -1,8 +1,6 @@
 import logging
 from typing import List
 
-from typing import List
-
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 from sqlmodel import delete, select
@@ -17,7 +15,6 @@ from phish_interface import (
     target_homepage_dict,
 )
 from summary_interface import collect_chats_in_paragraph_format, summarize
-
 
 logger = logging.getLogger('router')
 
@@ -77,10 +74,6 @@ async def welcome(request: Request):
 class StartChatResponse(BaseModel):
     response: str
 
-
-@router.post("/start-chat/{bait_id}", response_model=StartChatResponse)
-async def start_chat(request: Request, bait_id: int) -> StartChatResponse:
-
 @router.post("/start-chat/{bait_id}")
 async def start_chat(request: Request, bait_id: int) -> str:
     db: Database = request.app.state.db
@@ -112,13 +105,6 @@ class AddChatResponse(BaseModel):
     response: str
 
 
-@router.post("/add-chat/{bait_id}/{user_message}", response_model=AddChatResponse)
-async def add_chat(
-    request: Request, bait_id: int, user_message: str
-) -> AddChatResponse:
-        return first_ai_response
-
-
 @router.post("/add-chat/{bait_id}/{user_message}")
 async def add_chat(request: Request, bait_id: int, user_message: str) -> str:
     db: Database = request.app.state.db
@@ -129,18 +115,9 @@ async def add_chat(request: Request, bait_id: int, user_message: str) -> str:
         new_user_chat: ChatHistory = ChatHistory(
             message=user_message, sender=Sender.HUMAN, bait_id=bait_id
         )
-        old_chats: List[ChatHistory] = (
-            session.query(ChatHistory).where(ChatHistory.bait_id == bait_id).all()
-        )
-        new_user_chat: ChatHistory = ChatHistory(
-            message=user_message, sender=Sender.HUMAN, bait_id=bait_id
-        )
         session.add(new_user_chat)
         old_chats.append(new_user_chat)
         new_ai_message = continue_interview(old_chats)
-        new_ai_chat: ChatHistory = ChatHistory(
-            message=new_ai_message, sender=Sender.AI, bait_id=bait_id
-        )
         new_ai_chat: ChatHistory = ChatHistory(
             message=new_ai_message, sender=Sender.AI, bait_id=bait_id
         )
