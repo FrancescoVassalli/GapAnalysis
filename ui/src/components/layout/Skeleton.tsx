@@ -11,7 +11,7 @@ interface SkeletonProps {
 const Skeleton: FC<SkeletonProps> = ({ children, className = undefined }) => {
   return (
     <div
-      className={`flex flex-row h-screen bg-app-white-100 ${className ? className : ''}`.trim()}
+      className={`flex flex-row h-screen bg-light-haze-50 dark:bg-dark-haze-950 ${className ? className : ''}`.trim()}
     >
       <Navigation />
       <div className="flex flex-col w-full">

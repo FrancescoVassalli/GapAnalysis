@@ -19,11 +19,18 @@ const Navigation: FC = () => {
   const matchRoute = useMatchRoute();
 
   return (
-    <nav className="flex flex-col items-center p-4 text-white">
+    <nav
+      className="flex flex-col items-center p-4 
+        bg-light-haze-50 dark:bg-dark-haze-950 
+        text-light-haze-900 dark:text-light-haze-100"
+    >
       {/* Logo or Header */}
-      <div className="flex items-center justify-center mb-8 w-full h-12 animate-pulse bg-gray-300 rounded-sm">
+      <div
+        className="flex items-center justify-center mb-8 w-full h-12 animate-pulse 
+          bg-light-haze-300 dark:bg-dark-haze-600 rounded-sm"
+      >
         <svg
-          className="w-10 h-10 text-gray-600"
+          className="w-10 h-10 text-light-haze-600 dark:text-light-haze-300"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
@@ -43,15 +50,23 @@ const Navigation: FC = () => {
               <Link
                 to={link.path}
                 className={`group flex flex-col items-center p-2 transition-colors duration-300 
-                  ${isActive ? 'text-black font-bold' : 'text-gray-500 hover:text-gray-900 font-medium'}`}
+                  ${
+                    isActive
+                      ? 'text-light-haze-900 dark:text-light-haze-50 font-bold'
+                      : 'text-light-haze-600 dark:text-dark-haze-300 hover:text-light-haze-900 dark:hover:text-light-haze-200 font-medium'
+                  }`}
               >
                 <div className="relative flex items-center justify-center">
                   {/* Background box with hover effect */}
                   <div
-                    className={`absolute w-10 h-10 rounded-lg bg-gray-300 transition-all duration-300 
-                    ${isActive ? 'opacity-100 scale-110 bg-gradient-to-br from-gray-100 to-gray-300' : 'opacity-0'} 
+                    className={`absolute w-10 h-10 rounded-lg bg-light-haze-300 dark:bg-dark-haze-700 transition-all duration-300 
+                    ${
+                      isActive
+                        ? 'opacity-100 scale-110 bg-gradient-to-br from-light-haze-400 to-light-haze-200 dark:from-dark-haze-900 dark:to-dark-haze-300'
+                        : 'opacity-0'
+                    } 
                     group-hover:opacity-100 group-hover:scale-110 
-                    group-hover:bg-gradient-to-tr from-gray-200 to-gray-300`}
+                    group-hover:bg-gradient-to-tr from-light-haze-400 to-light-haze-200 dark:from-dark-haze-900 dark:to-dark-haze-300`}
                   ></div>
 
                   {/* Icon (changes on active state) */}

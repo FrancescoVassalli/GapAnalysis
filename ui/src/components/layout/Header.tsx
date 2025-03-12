@@ -1,13 +1,21 @@
 import Search from '@components/inputs/Search';
+import ThemeToggle from '@components/inputs/ThemeToggle';
 import type { FC } from 'react';
 
 const Header: FC = () => {
   return (
-    <header className="flex items-center justify-between p-4 text-white">
+    <header
+      className="flex items-center justify-between p-4 
+        bg-light-haze-50 dark:bg-dark-haze-950 
+        text-light-haze-900 dark:text-light-haze-100"
+    >
       {/* Logo / Placeholder */}
-      <div className="flex items-center justify-center w-3/12 h-12 animate-pulse bg-gray-300 rounded-sm sm:w-96">
+      <div
+        className="flex items-center justify-center w-3/12 h-12 animate-pulse 
+          bg-light-haze-300 dark:bg-dark-haze-600 rounded-sm sm:w-96"
+      >
         <svg
-          className="w-10 h-10 text-gray-600"
+          className="w-10 h-10 text-light-haze-600 dark:text-light-haze-300"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
@@ -23,8 +31,9 @@ const Header: FC = () => {
       </div>
 
       {/* Icons Section */}
-      <div className="flex items-center space-x-24 w-3/12">
+      <div className="flex items-center space-x-6 w-3/12 justify-end">
         {/* Icons like notifications, user profile, settings will go here */}
+        <ThemeToggle />
       </div>
     </header>
   );

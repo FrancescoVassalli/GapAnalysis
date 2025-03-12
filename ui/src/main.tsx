@@ -2,19 +2,28 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import ReactDOM from 'react-dom/client';
 import { routeTree } from './routeTree.gen.ts';
 import './style/index.css';
+;
 
-// Set up a Router instance
+// Ensure correct theme on load
+function applyTheme(theme: string) {
+  document.documentElement.classList.toggle('dark', theme === 'dark');
+  localStorage.setItem('theme', theme);
+}
+
+// Load saved theme or apply system preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  applyTheme(savedTheme);
+} else {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(prefersDark ? 'dark' : 'light');
+}
+
+// Set up the router
 const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
 });
-
-// Register things for typesafety
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
-}
 
 const rootElement = document.getElementById('app');
 
