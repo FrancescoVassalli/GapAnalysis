@@ -33,7 +33,13 @@
         "ms-toolsai.vscode-jupyter-cell-tags",
         "ms-toolsai.vscode-jupyter-slideshow",
         "ms-vscode.cpptools",
-        "streetssidesoftware.code-spell-checker"
+        "streetssidesoftware.code-spell-checker",
+        "bradlc.vscode-tailwindcss",
+        "dsznajder.es7-react-js-snippets",
+        "steoates.autoimport",
+        "ChakrounAnas.turbo-console-log",
+        "meganrogge.template-string-converter",
+        "biomejs.biome"
       ]
     }
   },

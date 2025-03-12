@@ -24,7 +24,22 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "style": {
+        "useSelfClosingElements": "off"
+      },
+      "a11y": {
+        "useAltText": "off",
+        "noSvgWithoutTitle": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
+      }
     }
+  },
+  "files": {
+    "ignore": [
+      "**/routeTree.gen.ts"
+    ]
   }
 }
