@@ -1,14 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { FC } from "react";
+import BaitEntry from "./BaitEntry";
 
-const fetchActiveBaits = async (): Promise<string[]> => {
+interface DbBait {
+    id:number;
+    name:string;
+    content: string;
+}
+
+const fetchActiveBaits = async (): Promise<DbBait[]> => {
     const { data } = await axios.get("http://localhost:8000/mock/active-baits");
     console.log(data);
     return data;
   };
-
-fetchActiveBaits();
 
 const BaitOverview: FC = ()=>{
 
@@ -19,13 +24,14 @@ const BaitOverview: FC = ()=>{
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error fetching active baits</p>;
     return (
-        // {activeBaits.map((bait) => (
-        //     <BaitEntry
-        //       id={bait.id}
-        //       name={bait.name}
-        //     />
-        //   ))}
-        <div>Hello</div>
+        <div>
+            {activeBaits?.map((bait) => (
+                <BaitEntry
+                  id={bait.id}
+                  name={bait.name}
+                />
+              ))}
+        </div>
     );
 }
 
