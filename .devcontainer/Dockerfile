@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.11-bookworm
+FROM --platform=linux/amd64 python:3.11-bookworm
 
 SHELL ["/bin/bash", "-c"]
 

@@ -18,7 +18,6 @@
     "@tailwindcss/postcss": "^4.0.12",
     "@tanstack/react-query": "^5.67.3",
     "@tanstack/react-router": "^1.114.12",
-    "axios": "^1.8.3",
     "openapi-fetch": "^0.13.4",
     "openapi-react-query": "^0.3.0",
     "postcss": "^8.5.3",

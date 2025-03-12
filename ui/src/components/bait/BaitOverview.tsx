@@ -1,37 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { FC } from "react";
+import type { FC } from "react";
+import { getActiveBaitsMockActiveBaitsGetOptions } from "src/client/@tanstack/react-query.gen";
 import BaitEntry from "./BaitEntry";
 
-interface DbBait {
-    id:number;
-    name:string;
-    content: string;
-}
+const BaitOverview: FC = () => {
+  const { data, isLoading, error } = useQuery({
+    ...getActiveBaitsMockActiveBaitsGetOptions(),
+  });
 
-const fetchActiveBaits = async (): Promise<Array<DbBait>> => {
-    const { data } = await axios.get("http://localhost:8000/mock/active-baits/");
-    return data['active_baits'];
-  };
+  if (isLoading) return <p>Loading...</p>;
+  if (!data || error) return <p>Error fetching active baits</p>;
 
-const BaitOverview: FC = ()=>{
-
-    const { data:activeBaits, isLoading, error } = useQuery({
-        queryKey: ["activeBaits"],
-        queryFn: fetchActiveBaits,
-      });
-    if (isLoading || !Array.isArray(activeBaits)) return <p>Loading...</p>;
-    if (error) return <p>Error fetching active baits</p>;
-    return (
-        <div>
-            {activeBaits?.map((bait) => (
-                <BaitEntry
-                  id={bait.id}
-                  name={bait.name}
-                />
-              ))}
-        </div>
-    );
-}
+  return (
+    <div>
+      {data.active_baits?.map((bait) => (
+        <BaitEntry key={bait.id} id={bait.id} name={bait.name} />
+      ))}
+    </div>
+  );
+};
 
 export default BaitOverview;
