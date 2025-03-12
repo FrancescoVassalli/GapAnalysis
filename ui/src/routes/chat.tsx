@@ -1,24 +1,45 @@
 import Sidebar from "@components/layout/Sidebar";
 import Wrapper from "@components/layout/Wrapper";
 import { SolidChat } from "@scarlab-icons/react";
-import { useQueryClient } from "@tanstack/react-query";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-
-// Define chat list for Sidebar
-const chatItems = Array.from({ length: 10 }, (_, i) => ({
-  id: (i + 1).toString(),
-  name: `Chat ${i + 1}`,
-  path: `/chat/${i + 1}`,
-}));
+import { getChatsMockChatsGetOptions } from "src/client/@tanstack/react-query.gen";
 
 export const Route = createFileRoute("/chat")({
   component: ChatLayout,
 });
 
+const fetchChatList = async () => {
+  const response = await fetch("http://0.0.0.0:8000/mock/chats");
+  const data = await response.json();
+  const chats = Object.entries(data).map(([id, name]) => ({
+    id,
+    name,
+    path: `/chat/${id}`,
+  }));
+  return chats;
+};
+
 function ChatLayout() {
   const queryClient = useQueryClient();
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
+
+  // const { data: chats = [] } = useQuery({
+  //   queryKey: ["chats"],
+  //   queryFn: fetchChatList,
+  // });
+  // console.log("🚀 ~ ChatLayout ~ chats:", chats);
+
+  // const chats = useQuery({
+  //   ...getChatsMockChatsGet(),
+  //   queryKey: ["chats"],
+  // });
+
+  const { data = [] } = useQuery({
+    ...getChatsMockChatsGetOptions(),
+  });
+  console.log("🚀 ~ ChatLayout ~ getChats:", data);
 
   useEffect(() => {
     const unsubscribe = queryClient.getQueryCache().subscribe(() => {
@@ -49,7 +70,7 @@ function ChatLayout() {
   }, [queryClient]);
 
   // Add isActive flag to each sidebar item based on the activeChatId
-  const itemsWithActive = chatItems.map((item) => ({
+  const itemsWithActive = data.map((item) => ({
     ...item,
     isActive: item.id === activeChatId,
   }));

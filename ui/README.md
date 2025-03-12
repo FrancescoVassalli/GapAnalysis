@@ -10,6 +10,13 @@ npm install
 
 ## Get started
 
+Before starting the server you need to generate the typescript API client
+>If changes are made to the API, you need to regenerate the client to reflect the changes in the Typescript Client
+
+```bash
+npm run generate-client
+```
+
 Start the dev server:
 
 ```bash

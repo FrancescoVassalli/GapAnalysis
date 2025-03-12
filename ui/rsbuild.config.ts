@@ -16,6 +16,10 @@ export default defineConfig({
         new rspack.CopyRspackPlugin({
           patterns: [{ from: 'favicon.svg' }],
         }),
+        new rspack.DefinePlugin({
+          'process.env.API_URL': JSON.stringify(process.env.API_URL),
+          'process.env.DEBUG': JSON.stringify(process.env.DEBUG),
+        })
       ],
     },
   },

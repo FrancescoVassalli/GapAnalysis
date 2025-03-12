@@ -1,7 +1,14 @@
 import logging
 from typing import List
 
+from typing import List
+
 from fastapi import APIRouter, Request
+from pydantic import BaseModel
+from sqlmodel import delete, select
+
+from db import Database
+from interview_interface import begin_interview, continue_interview
 from sqlmodel import delete, select
 
 from db import Database
@@ -15,6 +22,7 @@ from phish_interface import (
 )
 from summary_interface import collect_chats_in_paragraph_format, summarize
 
+
 logger = logging.getLogger('router')
 
 router = APIRouter(
@@ -24,32 +32,59 @@ router = APIRouter(
 )
 
 
-@router.get("/fetch-linkedin-page/{url}")
+class LinkedInPageResponse(BaseModel):
+    content: str
+
+
+@router.get("/fetch-linkedin-page/{url}", response_model=LinkedInPageResponse)
 async def fetch_linkedin_page(request: Request, url: str):
-    return request_linkedin_html(url)
+    content = request_linkedin_html(url)
+    return LinkedInPageResponse(content=content)
 
 
-@router.get("/bait/{target_name}")
+class BaitResponse(BaseModel):
+    id: int
+    content: str
+
+
+@router.get("/bait/{target_name}", response_model=BaitResponse)
 async def bait(request: Request, target_name: str):
     content = create_bait(target_name)
     db: Database = request.app.state.db
     with db.get_session() as session:
         bait = Bait(name=target_name, content=content)
+        bait = Bait(name=target_name, content=content)
         session.add(bait)
         session.commit()
         session.refresh(bait)
-        return {bait.id: bait.content}
+        return BaitResponse(id=bait.id, content=bait.content)
 
 
-@router.get("/email-html/{target_name}")
+class EmailHTMLResponse(BaseModel):
+    content: str
+
+
+@router.get("/email-html/{target_name}", response_model=EmailHTMLResponse)
 async def get_email_html(request: Request, target_name: str):
-    return complete_email_html(target_homepage_dict[target_name])
+    content = complete_email_html(target_homepage_dict[target_name])
+    return EmailHTMLResponse(content=content)
 
 
-@router.get("/welcome")
+class WelcomeResponse(BaseModel):
+    message: str
+
+
+@router.get("/welcome", response_model=WelcomeResponse)
 async def welcome(request: Request):
-    return "Welcome"
+    return WelcomeResponse(message="Welcome")
 
+
+class StartChatResponse(BaseModel):
+    response: str
+
+
+@router.post("/start-chat/{bait_id}", response_model=StartChatResponse)
+async def start_chat(request: Request, bait_id: int) -> StartChatResponse:
 
 @router.post("/start-chat/{bait_id}")
 async def start_chat(request: Request, bait_id: int) -> str:
@@ -61,13 +96,31 @@ async def start_chat(request: Request, bait_id: int) -> str:
         first_chat: ChatHistory = ChatHistory(
             message=db_bait.content, sender=Sender.HUMAN, bait_id=db_bait.id
         )
+        db_bait: Bait = session.query(Bait).where(Bait.id == bait_id).one()
+        first_chat: ChatHistory = ChatHistory(
+            message=db_bait.content, sender=Sender.HUMAN, bait_id=db_bait.id
+        )
         first_ai_response = begin_interview(db_bait.content)
+        first_ai_chat: ChatHistory = ChatHistory(
+            message=first_ai_response, sender=Sender.AI, bait_id=db_bait.id
+        )
         first_ai_chat: ChatHistory = ChatHistory(
             message=first_ai_response, sender=Sender.AI, bait_id=db_bait.id
         )
         session.add(first_chat)
         session.add(first_ai_chat)
         session.commit()
+        return StartChatResponse(response=first_ai_response)
+
+
+class AddChatResponse(BaseModel):
+    response: str
+
+
+@router.post("/add-chat/{bait_id}/{user_message}", response_model=AddChatResponse)
+async def add_chat(
+    request: Request, bait_id: int, user_message: str
+) -> AddChatResponse:
         return first_ai_response
 
 
@@ -81,14 +134,44 @@ async def add_chat(request: Request, bait_id: int, user_message: str) -> str:
         new_user_chat: ChatHistory = ChatHistory(
             message=user_message, sender=Sender.HUMAN, bait_id=bait_id
         )
+        old_chats: List[ChatHistory] = (
+            session.query(ChatHistory).where(ChatHistory.bait_id == bait_id).all()
+        )
+        new_user_chat: ChatHistory = ChatHistory(
+            message=user_message, sender=Sender.HUMAN, bait_id=bait_id
+        )
         session.add(new_user_chat)
         old_chats.append(new_user_chat)
         new_ai_message = continue_interview(old_chats)
         new_ai_chat: ChatHistory = ChatHistory(
             message=new_ai_message, sender=Sender.AI, bait_id=bait_id
         )
+        new_ai_chat: ChatHistory = ChatHistory(
+            message=new_ai_message, sender=Sender.AI, bait_id=bait_id
+        )
         session.add(new_ai_chat)
         session.commit()
+        return AddChatResponse(response=new_ai_message)
+
+
+class ChatResponse(BaseModel):
+    id: int
+    name: str
+    path: str
+
+
+# create api route to pull all chats for a user
+@router.get("/chats", response_model=List[ChatResponse])
+async def get_chats(request: Request):
+    db: Database = request.app.state.db
+    with db.get_session() as session:
+        baits: List[Bait] = session.query(Bait).all()
+        all_chats = [
+            ChatResponse(id=bait.id, name=bait.name, path=f"/chat/{bait.id}")
+            for bait in baits
+        ]
+        return all_chats
+
         return new_ai_message
 
 

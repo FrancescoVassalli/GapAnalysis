@@ -9,13 +9,17 @@
     "dev": "rsbuild dev",
     "format": "biome format --write",
     "preview": "rsbuild preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "generate-client": "openapi-ts"
   },
   "dependencies": {
+    "@hey-api/client-fetch": "^0.8.3",
     "@scarlab-icons/react": "^2.0.3",
     "@tailwindcss/postcss": "^4.0.12",
     "@tanstack/react-query": "^5.67.3",
     "@tanstack/react-router": "^1.114.12",
+    "openapi-fetch": "^0.13.4",
+    "openapi-react-query": "^0.3.0",
     "postcss": "^8.5.3",
     "postcss-loader": "^8.1.1",
     "react": "^19.0.0",
@@ -27,12 +31,14 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@hey-api/openapi-ts": "^0.64.11",
     "@rsbuild/core": "^1.2.14",
     "@rsbuild/plugin-react": "^1.1.1",
     "@tanstack/react-query-devtools": "^5.67.3",
     "@tanstack/react-router-devtools": "^1.114.12",
     "@tanstack/router-devtools": "^1.114.15",
     "@tanstack/router-plugin": "^1.114.12",
+    "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "typescript": "^5.8.2"

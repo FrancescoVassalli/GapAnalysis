@@ -9,7 +9,7 @@ import type { FC, ReactNode } from "react";
 type SidebarProps = {
   title?: string;
   icon?: ReactNode;
-  items: { id: string; name: string; path: string; isActive?: boolean }[];
+  items: { id: string; name: string; path: string; isActive?: boolean }[] | [];
 };
 
 const Sidebar: FC<SidebarProps> = ({ title = "", icon, items }) => {
