@@ -13,6 +13,7 @@ from phish_interface import (
     request_linkedin_html,
     target_homepage_dict,
 )
+from summary_interface import collect_chats_in_paragraph_format, summarize
 
 logger = logging.getLogger('router')
 
@@ -78,7 +79,7 @@ async def start_chat(request: Request, bait_id: int) -> str:
 
 
 @router.post("/add-chat/{bait_id}/{user_message}")
-async def start_chat(request: Request, bait_id: int, user_message: str) -> str:
+async def add_chat(request: Request, bait_id: int, user_message: str) -> str:
     db: Database = request.app.state.db
     with db.get_session() as session:
         old_chats: List[ChatHistory] = (
@@ -96,3 +97,17 @@ async def start_chat(request: Request, bait_id: int, user_message: str) -> str:
         session.add(new_ai_chat)
         session.commit()
         return new_ai_message
+
+
+@router.get("/all-bait-chat/{bait_id}")
+async def get_all_chats_for_bait(request: Request, bait_id: int) -> str:
+    db: Database = request.app.state.db
+    with db.get_session() as session:
+        return collect_chats_in_paragraph_format(session, bait_id)
+
+
+@router.get("/summary")
+async def get_summary(request: Request) -> str:
+    db: Database = request.app.state.db
+    with db.get_session() as session:
+        return summarize(session)
