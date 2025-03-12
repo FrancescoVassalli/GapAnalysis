@@ -1,17 +1,17 @@
-import Sidebar from "@components/layout/Sidebar";
-import Wrapper from "@components/layout/Wrapper";
-import { SolidChat } from "@scarlab-icons/react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { getChatsMockChatsGetOptions } from "src/client/@tanstack/react-query.gen";
+import Sidebar from '@components/layout/Sidebar';
+import Wrapper from '@components/layout/Wrapper';
+import { SolidChat } from '@scarlab-icons/react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Outlet, createFileRoute } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { getChatsMockChatsGetOptions } from 'src/client/@tanstack/react-query.gen';
 
-export const Route = createFileRoute("/chat")({
+export const Route = createFileRoute('/chat')({
   component: ChatLayout,
 });
 
 const fetchChatList = async () => {
-  const response = await fetch("http://0.0.0.0:8000/mock/chats");
+  const response = await fetch('http://0.0.0.0:8000/mock/chats');
   const data = await response.json();
   const chats = Object.entries(data).map(([id, name]) => ({
     id,
@@ -25,7 +25,6 @@ function ChatLayout() {
   const queryClient = useQueryClient();
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
 
-
   const { data = [] } = useQuery({
     ...getChatsMockChatsGetOptions(),
   });
@@ -38,7 +37,7 @@ function ChatLayout() {
       const activeQueries = allQueries.filter((query) => {
         if (
           Array.isArray(query.queryKey) &&
-          query.queryKey[0] === "activeChat"
+          query.queryKey[0] === 'activeChat'
         ) {
           return query.getObserversCount() > 0;
         }
@@ -66,7 +65,7 @@ function ChatLayout() {
 
   // get active chat name
   const activeItem = itemsWithActive.find((item) => item.isActive);
-  console.log("🚀 ~ ChatLayout ~ activeItem:", activeItem);
+  console.log('🚀 ~ ChatLayout ~ activeItem:', activeItem);
 
   return (
     <div className="flex h-full">

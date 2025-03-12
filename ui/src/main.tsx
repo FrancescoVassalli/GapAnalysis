@@ -2,7 +2,6 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import ReactDOM from 'react-dom/client';
 import { routeTree } from './routeTree.gen.ts';
 import './style/index.css';
-;
 
 // Ensure correct theme on load
 function applyTheme(theme: string) {

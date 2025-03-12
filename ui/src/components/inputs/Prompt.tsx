@@ -1,4 +1,4 @@
-import { type FC, useEffect, useRef, useState } from "react";
+import { type FC, useEffect, useRef, useState } from 'react';
 
 interface PromptProps {
   onSend: (message: string) => void;
@@ -7,20 +7,20 @@ interface PromptProps {
 const MAX_TEXTAREA_HEIGHT = 150;
 
 const Prompt: FC<PromptProps> = ({ onSend }) => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSend = () => {
-    if (input.trim() !== "") {
+    if (input.trim() !== '') {
       onSend(input.trim());
-      setInput("");
+      setInput('');
     }
   };
 
   useEffect(() => {
     const ta = textareaRef.current;
     if (ta) {
-      ta.style.height = "auto";
+      ta.style.height = 'auto';
       const newHeight = Math.min(ta.scrollHeight, MAX_TEXTAREA_HEIGHT);
       ta.style.height = `${newHeight}px`;
     }
@@ -38,7 +38,7 @@ const Prompt: FC<PromptProps> = ({ onSend }) => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
+            if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
               handleSend();
             }

@@ -1,9 +1,9 @@
-import Message from "@components/chat/Message";
-import Prompt from "@components/inputs/Prompt";
-import { type FC, useEffect, useRef, useState } from "react";
+import Message from '@components/chat/Message';
+import Prompt from '@components/inputs/Prompt';
+import { type FC, useEffect, useRef, useState } from 'react';
 
 interface BubblesProps {
-  messages: { type: "user" | "bot"; text: string }[];
+  messages: { type: 'user' | 'bot'; text: string }[];
   loading: boolean;
 }
 
@@ -19,7 +19,7 @@ const Bubbles: FC<BubblesProps> = ({ messages: initialMessages, loading }) => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
         top: chatContainerRef.current.scrollHeight,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }
   }, [messages]);
@@ -27,8 +27,8 @@ const Bubbles: FC<BubblesProps> = ({ messages: initialMessages, loading }) => {
   const handleSendMessage = (message: string) => {
     setMessages((prev) => [
       ...prev,
-      { type: "user", text: message },
-      { type: "bot", text: "That's an interesting question! Let me think..." },
+      { type: 'user', text: message },
+      { type: 'bot', text: "That's an interesting question! Let me think..." },
     ]);
   };
 
