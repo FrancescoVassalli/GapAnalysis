@@ -1,5 +1,5 @@
+import CreateBait from '@components/bait/CreatBait';
 import { createFileRoute } from '@tanstack/react-router';
-
 export const Route = createFileRoute('/bait')({
   component: RouteComponent,
 });
@@ -22,18 +22,10 @@ function RouteComponent() {
             key={bait.id} 
             id={bait.id} 
             name={bait.name} 
-            random={bait.random} 
+            chat_link={bait.random} 
           />
         ))}
       </div>
-    </div>
-  );
-}
-
-function CreateBait() {
-  return (
-    <div className="p-4 border border-dashed border-gray-400 rounded hover:bg-gray-100 cursor-pointer">
-      <p className="text-center text-blue-500">+ Create New Bait</p>
     </div>
   );
 }
