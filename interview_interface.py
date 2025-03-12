@@ -1,8 +1,7 @@
-
-
 from openai import OpenAI
 from models import ChatHistory
 from typing import List
+
 client = OpenAI()
 
 SYSTEM_PROMPT = '''You are interviewing a college that clicked on a bait email to check their vigilance against phishing campaigns. 
@@ -22,7 +21,8 @@ For example if they noticed that the email was external you should then find out
 More broadly, your goal is to find out the who,what,where,when,how for broader context around these key questions.
 However the user will not answer well if you ask them multiple questions at one time.\n'''
 
-def begin_interview(bait_context:str)->str:
+
+def begin_interview(bait_context: str) -> str:
     # this can be AI but the first message really does not need to be so I will use text
     # completion = client.chat.completions.create(
     #   model="gpt-4o",
@@ -58,28 +58,23 @@ def begin_interview(bait_context:str)->str:
     # return completion.choices[0].message.content
     return "Thanks for joining, let's get started with figuring out how to improve our anti-phising practices. First, was this email marked as EXTERNAL?"
 
-def continue_interview(existing_chats:List[ChatHistory])->str:
-    messages = [{
-          "role": "system",
-          "content": [
-            {
-              "type": "text",
-              "text": SYSTEM_PROMPT
-            }
-          ]
-        }]
-    existing_chat_messages_in_open_ai_format = [chat.get_message_dict() for chat in existing_chats]
+
+def continue_interview(existing_chats: List[ChatHistory]) -> str:
+    messages = [
+        {"role": "system", "content": [{"type": "text", "text": SYSTEM_PROMPT}]}
+    ]
+    existing_chat_messages_in_open_ai_format = [
+        chat.get_message_dict() for chat in existing_chats
+    ]
     messages.extend(existing_chat_messages_in_open_ai_format)
     completion = client.chat.completions.create(
-      model="gpt-4o",
-      messages=messages,
-      response_format={
-        "type": "text"
-      },
-      temperature=1,
-      max_completion_tokens=2048,
-      top_p=1,
-      frequency_penalty=0,
-      presence_penalty=0
+        model="gpt-4o",
+        messages=messages,
+        response_format={"type": "text"},
+        temperature=1,
+        max_completion_tokens=2048,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0,
     )
     return completion.choices[0].message.content

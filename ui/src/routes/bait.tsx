@@ -5,5 +5,5 @@ export const Route = createFileRoute('/bait')({
 });
 
 function RouteComponent() {
-  return <div>Hello "/bait"!</div>;
+  return <div>Good "/bait"!</div>;
 }

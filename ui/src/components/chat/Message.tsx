@@ -1,16 +1,16 @@
-import type { FC } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkBreaks from "remark-breaks";
-import remarkGfm from "remark-gfm";
+import type { FC } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
+import remarkGfm from 'remark-gfm';
 
 interface MessageProps {
-  type: "user" | "bot";
+  type: 'user' | 'bot';
   text: string;
   enableMarkdown?: boolean;
 }
 
 const Message: FC<MessageProps> = ({ type, text, enableMarkdown }) => {
-  const isUser = type === "user";
+  const isUser = type === 'user';
 
   // Simple detection: if the text contains common markdown markers (headers, backticks, bold, etc.)
   const detectMarkdown = (text: string): boolean =>
@@ -23,14 +23,14 @@ const Message: FC<MessageProps> = ({ type, text, enableMarkdown }) => {
 
   // Styling classes.
   const containerClass = `flex items-start my-4 ${
-    !isUser ? "flex-row-reverse" : ""
+    !isUser ? 'flex-row-reverse' : ''
   }`;
-  const avatarClass = `${isUser ? "mr-2" : "ml-2"} h-8 w-8 rounded-full`;
+  const avatarClass = `${isUser ? 'mr-2' : 'ml-2'} h-8 w-8 rounded-full`;
   const avatarSrc = isUser
-    ? "https://dummyimage.com/128x128/363536/ffffff&text=J"
-    : "https://dummyimage.com/128x128/354ea1/ffffff&text=G";
+    ? 'https://dummyimage.com/128x128/363536/ffffff&text=J'
+    : 'https://dummyimage.com/128x128/354ea1/ffffff&text=G';
   const bubbleClass = `flex flex-col ${
-    isUser ? "rounded-b-xl rounded-tr-xl" : "rounded-b-xl rounded-tl-xl"
+    isUser ? 'rounded-b-xl rounded-tr-xl' : 'rounded-b-xl rounded-tl-xl'
   } bg-light-haze-50 dark:bg-dark-haze-800 p-4 sm:max-w-md md:max-w-2xl`;
 
   // If markdown rendering is not enabled, simply render the text in a paragraph.
@@ -40,7 +40,7 @@ const Message: FC<MessageProps> = ({ type, text, enableMarkdown }) => {
         <img
           className={avatarClass}
           src={avatarSrc}
-          alt={isUser ? "User Avatar" : "Bot Avatar"}
+          alt={isUser ? 'User Avatar' : 'Bot Avatar'}
         />
         <div className={bubbleClass}>
           <p className="whitespace-pre-line break-words">{text}</p>
@@ -55,7 +55,7 @@ const Message: FC<MessageProps> = ({ type, text, enableMarkdown }) => {
       <img
         className={avatarClass}
         src={avatarSrc}
-        alt={isUser ? "User Avatar" : "Bot Avatar"}
+        alt={isUser ? 'User Avatar' : 'Bot Avatar'}
       />
       <div className={bubbleClass}>
         <ReactMarkdown

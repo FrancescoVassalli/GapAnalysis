@@ -2,6 +2,7 @@ import logging
 from typing import List
 
 from fastapi import APIRouter, Request
+from pydantic import BaseModel
 from sqlmodel import delete, select
 
 from db import Database
@@ -23,13 +24,22 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+class LinkedInPageResponse(BaseModel):
+    content: str
 
-@router.get("/fetch-linkedin-page/{url}")
+
+@router.get("/fetch-linkedin-page/{url}", response_model=LinkedInPageResponse)
 async def fetch_linkedin_page(request: Request, url: str):
-    return request_linkedin_html(url)
+    content = request_linkedin_html(url)
+    return LinkedInPageResponse(content=content)
 
 
-@router.get("/bait/{target_name}")
+class BaitResponse(BaseModel):
+    id: int
+    content: str
+
+
+@router.get("/bait/{target_name}", response_model=BaitResponse)
 async def bait(request: Request, target_name: str):
     content = create_bait(target_name)
     db: Database = request.app.state.db
@@ -38,18 +48,30 @@ async def bait(request: Request, target_name: str):
         session.add(bait)
         session.commit()
         session.refresh(bait)
-        return {bait.id: bait.content}
+        return BaitResponse(id=bait.id, content=bait.content)
 
 
-@router.get("/email-html/{target_name}")
+class EmailHTMLResponse(BaseModel):
+    content: str
+
+
+@router.get("/email-html/{target_name}", response_model=EmailHTMLResponse)
 async def get_email_html(request: Request, target_name: str):
-    return complete_email_html(target_homepage_dict[target_name])
+    content = complete_email_html(target_homepage_dict[target_name])
+    return EmailHTMLResponse(content=content)
 
 
-@router.get("/welcome")
+class WelcomeResponse(BaseModel):
+    message: str
+
+
+@router.get("/welcome", response_model=WelcomeResponse)
 async def welcome(request: Request):
-    return "Welcome"
+    return WelcomeResponse(message="Welcome")
 
+
+class StartChatResponse(BaseModel):
+    response: str
 
 @router.post("/start-chat/{bait_id}")
 async def start_chat(request: Request, bait_id: int) -> str:
@@ -68,7 +90,11 @@ async def start_chat(request: Request, bait_id: int) -> str:
         session.add(first_chat)
         session.add(first_ai_chat)
         session.commit()
-        return first_ai_response
+        return StartChatResponse(response=first_ai_response)
+
+
+class AddChatResponse(BaseModel):
+    response: str
 
 
 @router.post("/add-chat/{bait_id}/{user_message}")
@@ -89,18 +115,46 @@ async def add_chat(request: Request, bait_id: int, user_message: str) -> str:
         )
         session.add(new_ai_chat)
         session.commit()
-        return new_ai_message
+        return AddChatResponse(response=new_ai_message)
 
 
-@router.get("/all-bait-chat/{bait_id}")
-async def get_all_chats_for_bait(request: Request, bait_id: int) -> str:
+class ChatResponse(BaseModel):
+    id: int
+    name: str
+    path: str
+
+
+# create api route to pull all chats for a user
+@router.get("/chats", response_model=List[ChatResponse])
+async def get_chats(request: Request):
     db: Database = request.app.state.db
     with db.get_session() as session:
-        return collect_chats_in_paragraph_format(session, bait_id)
+        baits: List[Bait] = session.query(Bait).all()
+        all_chats = [
+            ChatResponse(id=bait.id, name=bait.name, path=f"/chat/{bait.id}")
+            for bait in baits
+        ]
+        return all_chats
+
+class AllBaitChatResponse(BaseModel):
+  content: str
 
 
-@router.get("/summary")
-async def get_summary(request: Request) -> str:
-    db: Database = request.app.state.db
-    with db.get_session() as session:
-        return summarize(session)
+@router.get("/all-bait-chat/{bait_id}", response_model=AllBaitChatResponse)
+async def get_all_chats_for_bait(request: Request, bait_id: int) -> AllBaitChatResponse:
+  db: Database = request.app.state.db
+  with db.get_session() as session:
+    content = collect_chats_in_paragraph_format(session, bait_id)
+    return AllBaitChatResponse(content=content)
+
+
+class SummaryResponse(BaseModel):
+  summary: str
+
+
+@router.get("/summary", response_model=SummaryResponse)
+async def get_summary(request: Request) -> SummaryResponse:
+  db: Database = request.app.state.db
+  with db.get_session() as session:
+    summary = summarize(session)
+    return SummaryResponse(summary=summary)

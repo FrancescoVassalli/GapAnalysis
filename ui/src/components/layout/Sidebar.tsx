@@ -2,19 +2,21 @@ import {
   GhostPlusSquare,
   OutlinePlusSquare,
   OutlineSparkles,
-} from "@scarlab-icons/react";
-import { Link, useLocation } from "@tanstack/react-router";
-import type { FC, ReactNode } from "react";
+} from '@scarlab-icons/react';
+import { Link, useLocation } from '@tanstack/react-router';
+import type { FC, ReactNode } from 'react';
 
 type SidebarProps = {
   title?: string;
   icon?: ReactNode;
-  items: { id: string; name: string; path: string; isActive?: boolean }[];
+  items:
+    | { id: string | number; name: string; path: string; isActive?: boolean }[]
+    | [];
 };
 
-const Sidebar: FC<SidebarProps> = ({ title = "", icon, items }) => {
+const Sidebar: FC<SidebarProps> = ({ title = '', icon, items }) => {
   const { pathname } = useLocation();
-  const sidebarTitle = title || pathname.split("/")[1].replace("/", "");
+  const sidebarTitle = title || pathname.split('/')[1].replace('/', '');
 
   return (
     <aside className="w-64 h-full bg-light-haze-100 dark:bg-dark-haze-900 text-light-haze-900 dark:text-light-haze-100 flex flex-col">
@@ -42,8 +44,8 @@ const Sidebar: FC<SidebarProps> = ({ title = "", icon, items }) => {
             to={path}
             className={`flex items-center p-2 rounded-lg cursor-pointer transition ${
               isActive
-                ? "bg-blue-500 text-white"
-                : "text-light-haze-600 dark:text-light-haze-300 hover:bg-light-haze-200 dark:hover:bg-dark-haze-800 hover:text-light-haze-900 dark:hover:text-light-haze-100"
+                ? 'bg-blue-500 text-white'
+                : 'text-light-haze-600 dark:text-light-haze-300 hover:bg-light-haze-200 dark:hover:bg-dark-haze-800 hover:text-light-haze-900 dark:hover:text-light-haze-100'
             }`}
           >
             {isActive && (

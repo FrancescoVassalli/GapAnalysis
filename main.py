@@ -6,8 +6,10 @@ import uvicorn
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from db import Database
+from pydantic import BaseModel
+
 import ana
+from db import Database
 
 logger = logging.getLogger("Main")
 
@@ -18,7 +20,11 @@ app = FastAPI()
 app.include_router(ana.router)
 
 
-@app.get("/")
+class Message(BaseModel):
+    msg: str
+
+
+@app.get("/", response_model=Message)
 async def read_main():
     return {"msg": "LLM-KG-API"}
 
