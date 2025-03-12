@@ -24,18 +24,28 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
+class ValidTargetsResponse(BaseModel):
+    targets: List[str]
+
+
 @router.get("/valid-targets/")
 async def valid_targets(request: Request) -> List[str]:
     target_names = list(target_homepage_dict.keys())
     target_names.remove('jeremy')
-    return target_names
+    return ValidTargetsResponse(targets=target_names)
+
+
+class ActiveBaitsResponse(BaseModel):
+    active_baits: List[Bait]
 
 
 @router.get("/active-baits/")
 async def get_active_baits(request: Request) -> List[Bait]:
     db: Database = request.app.state.db
     with db.get_session() as session:
-        return session.exec(select(Bait)).all()
+        return ActiveBaitsResponse(active_baits=session.exec(select(Bait)).all())
+
 
 class LinkedInPageResponse(BaseModel):
     content: str
@@ -50,6 +60,7 @@ async def fetch_linkedin_page(request: Request, url: str):
 class BaitResponse(BaseModel):
     id: int
     content: str
+
 
 @router.get("/bait/{target_name}", response_model=BaitResponse)
 async def bait(request: Request, target_name: str):
@@ -84,6 +95,7 @@ async def welcome(request: Request):
 
 class StartChatResponse(BaseModel):
     response: str
+
 
 @router.post("/start-chat/{bait_id}")
 async def start_chat(request: Request, bait_id: int) -> str:
@@ -148,25 +160,26 @@ async def get_chats(request: Request):
         ]
         return all_chats
 
+
 class AllBaitChatResponse(BaseModel):
-  content: str
+    content: str
 
 
 @router.get("/all-bait-chat/{bait_id}", response_model=AllBaitChatResponse)
 async def get_all_chats_for_bait(request: Request, bait_id: int) -> AllBaitChatResponse:
-  db: Database = request.app.state.db
-  with db.get_session() as session:
-    content = collect_chats_in_paragraph_format(session, bait_id)
-    return AllBaitChatResponse(content=content)
+    db: Database = request.app.state.db
+    with db.get_session() as session:
+        content = collect_chats_in_paragraph_format(session, bait_id)
+        return AllBaitChatResponse(content=content)
 
 
 class SummaryResponse(BaseModel):
-  summary: str
+    summary: str
 
 
 @router.get("/summary", response_model=SummaryResponse)
 async def get_summary(request: Request) -> SummaryResponse:
-  db: Database = request.app.state.db
-  with db.get_session() as session:
-    summary = summarize(session)
-    return SummaryResponse(summary=summary)
+    db: Database = request.app.state.db
+    with db.get_session() as session:
+        summary = summarize(session)
+        return SummaryResponse(summary=summary)
