@@ -1,10 +1,12 @@
-from openai import OpenAI
-from models import ChatHistory
 from typing import List
+
+from openai import OpenAI
+
+from models import ChatHistory
 
 client = OpenAI()
 
-SYSTEM_PROMPT = '''You are interviewing a college that clicked on a bait email to check their vigilance against phishing campaigns. 
+SYSTEM_PROMPT = '''You are interviewing a colleague that clicked on a bait email to check their vigilance against phishing campaigns. 
 Interview the user to find information useful to the cybersecurity team for uncovering gaps in their training. 
 The user will begin the interview with the html for the email they clicked on. You should then take the lead in the interview by asking them questions.
 
