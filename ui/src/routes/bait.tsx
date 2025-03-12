@@ -6,7 +6,6 @@ export const Route = createFileRoute('/bait')({
 });
 
 function RouteComponent() {
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-4xl font-bold text-center mb-6">Bait Summary</h1>

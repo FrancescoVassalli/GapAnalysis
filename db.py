@@ -5,6 +5,7 @@ from sqlmodel import Session, create_engine, SQLModel
 
 logger = logging.getLogger("Database")
 
+
 class Database:
     def __init__(self, db_url: str | None = None):
         load_dotenv(find_dotenv())
@@ -18,7 +19,7 @@ class Database:
     #     session.exec(select(User)).all()
     def get_session(self, **kwargs):
         return Session(self.engine, **kwargs)
-    
+
     # Example use:
     # with db.get_sql_session() as con:
     #     rs = con.execute('SELECT * FROM users')

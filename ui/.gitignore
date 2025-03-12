@@ -1,3 +1,6 @@
 # Dist
 node_modules
 dist/
+
+# Typescript Generated Client
+src/client
