@@ -1,7 +1,7 @@
 import logging
 import re
 from difflib import unified_diff
-from typing import List, Sequence
+from typing import Dict, List, Sequence
 
 import requests
 from bs4 import BeautifulSoup
@@ -15,8 +15,11 @@ from jeremy_linkedin import PAGE as LINKEDIN_JEREMY
 
 client = OpenAI()
 
-target_linkedin_dict = {'jeremy': LINKEDIN_JEREMY, 'james': LINKEDIN_JAMES}
-target_homepage_dict = {'jeremy': HOME_JEREMY, 'james': HOME_JAMES}
+target_linkedin_dict: Dict[str, str] = {
+    'jeremy': LINKEDIN_JEREMY,
+    'james': LINKEDIN_JAMES,
+}
+target_homepage_dict: Dict[str, str] = {'jeremy': HOME_JEREMY, 'james': HOME_JAMES}
 
 logger = logging.getLogger("phish_interface")
 
