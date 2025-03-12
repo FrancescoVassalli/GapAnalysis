@@ -40,6 +40,7 @@ class ActiveBaitsResponse(BaseModel):
     active_baits: List[Bait]
 
 
+
 @router.get("/active-baits/", response_model=ActiveBaitsResponse)
 async def get_active_baits(request: Request) -> ActiveBaitsResponse:
     db: Database = request.app.state.db
