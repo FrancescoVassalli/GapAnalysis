@@ -29,8 +29,8 @@ class ValidTargetsResponse(BaseModel):
     targets: List[str]
 
 
-@router.get("/valid-targets/")
-async def valid_targets(request: Request) -> List[str]:
+@router.get("/valid-targets/", response_model=ValidTargetsResponse)
+async def valid_targets(request: Request) -> ValidTargetsResponse:
     target_names = list(target_homepage_dict.keys())
     target_names.remove('jeremy')
     return ValidTargetsResponse(targets=target_names)
@@ -40,8 +40,8 @@ class ActiveBaitsResponse(BaseModel):
     active_baits: List[Bait]
 
 
-@router.get("/active-baits/")
-async def get_active_baits(request: Request) -> List[Bait]:
+@router.get("/active-baits/", response_model=ActiveBaitsResponse)
+async def get_active_baits(request: Request) -> ActiveBaitsResponse:
     db: Database = request.app.state.db
     with db.get_session() as session:
         return ActiveBaitsResponse(active_baits=session.exec(select(Bait)).all())
