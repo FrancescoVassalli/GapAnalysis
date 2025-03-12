@@ -1,5 +1,6 @@
 services:
   python-dev:
+    platform: "linux/amd64"
     container_name: "python-dev"
     build:
       context: ..
