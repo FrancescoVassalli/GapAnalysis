@@ -22,7 +22,7 @@ client = genai.Client(
 )
 MODEL = "gemini-2.0-flash"
 
-MAKE_SUMMARY_TEXT = "Here are series of interviews from colleges who took the bait from our corporate anti-phishing training. The cybersecurity team would like you to summarize the interviews so they can plan next steps."
+MAKE_SUMMARY_TEXT = "Here are series of interviews from colleagues who took the bait from our corporate anti-phishing training. The cybersecurity team would like you to summarize the interviews so they can plan next steps."
 
 
 def complete_email_html(hompage_html: str):
