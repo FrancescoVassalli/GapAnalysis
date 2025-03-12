@@ -25,21 +25,10 @@ function ChatLayout() {
   const queryClient = useQueryClient();
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
 
-  // const { data: chats = [] } = useQuery({
-  //   queryKey: ["chats"],
-  //   queryFn: fetchChatList,
-  // });
-  // console.log("🚀 ~ ChatLayout ~ chats:", chats);
-
-  // const chats = useQuery({
-  //   ...getChatsMockChatsGet(),
-  //   queryKey: ["chats"],
-  // });
 
   const { data = [] } = useQuery({
     ...getChatsMockChatsGetOptions(),
   });
-  console.log("🚀 ~ ChatLayout ~ getChats:", data);
 
   useEffect(() => {
     const unsubscribe = queryClient.getQueryCache().subscribe(() => {
@@ -72,11 +61,11 @@ function ChatLayout() {
   // Add isActive flag to each sidebar item based on the activeChatId
   const itemsWithActive = data.map((item) => ({
     ...item,
-    isActive: item.id === activeChatId,
+    isActive: Number(item.id) === Number(activeChatId),
   }));
 
   // get active chat name
-  const activeItem = itemsWithActive.find((item) => item.id === activeChatId);
+  const activeItem = itemsWithActive.find((item) => item.isActive);
   console.log("🚀 ~ ChatLayout ~ activeItem:", activeItem);
 
   return (
