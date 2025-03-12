@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import axios from "axios";
 import { FC } from "react";
 const submitTarget = async (target_name:string): Promise<string[]> => {
-    const { data } = await axios.get(`http://localhost:8000/mock/bait/${target_name}`);
+    const { data } = await axios.get(`http://localhost:8000/mock/bait/${target_name}/`);
     console.log(data);
     const queryClient = useQueryClient();
     queryClient.invalidateQueries({ queryKey: ['activeBaits'] });

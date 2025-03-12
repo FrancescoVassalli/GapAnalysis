@@ -9,10 +9,9 @@ interface DbBait {
     content: string;
 }
 
-const fetchActiveBaits = async (): Promise<DbBait[]> => {
-    const { data } = await axios.get("http://localhost:8000/mock/active-baits");
-    console.log(data);
-    return data;
+const fetchActiveBaits = async (): Promise<Array<DbBait>> => {
+    const { data } = await axios.get("http://localhost:8000/mock/active-baits/");
+    return data['active_baits'];
   };
 
 const BaitOverview: FC = ()=>{
@@ -21,7 +20,7 @@ const BaitOverview: FC = ()=>{
         queryKey: ["activeBaits"],
         queryFn: fetchActiveBaits,
       });
-    if (isLoading) return <p>Loading...</p>;
+    if (isLoading || !Array.isArray(activeBaits)) return <p>Loading...</p>;
     if (error) return <p>Error fetching active baits</p>;
     return (
         <div>

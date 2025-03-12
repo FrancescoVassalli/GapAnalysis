@@ -4,8 +4,8 @@ import { FC, useState } from "react";
 import TargetButton from "./TargetButton";
 
 const fetchValidTargets = async (): Promise<string[]> => {
-    const { data } = await axios.get("http://localhost:8000/mock/valid-targets");
-    return data;
+    const { data } = await axios.get("http://localhost:8000/mock/valid-targets/");
+    return data['targets'];
   };
 
 const CreateBait: FC = ()=>{
