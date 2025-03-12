@@ -45,7 +45,6 @@ async def bait(request: Request, target_name: str):
     db: Database = request.app.state.db
     with db.get_session() as session:
         bait = Bait(name=target_name, content=content)
-        bait = Bait(name=target_name, content=content)
         session.add(bait)
         session.commit()
         session.refresh(bait)
@@ -84,14 +83,7 @@ async def start_chat(request: Request, bait_id: int) -> str:
         first_chat: ChatHistory = ChatHistory(
             message=db_bait.content, sender=Sender.HUMAN, bait_id=db_bait.id
         )
-        db_bait: Bait = session.query(Bait).where(Bait.id == bait_id).one()
-        first_chat: ChatHistory = ChatHistory(
-            message=db_bait.content, sender=Sender.HUMAN, bait_id=db_bait.id
-        )
         first_ai_response = begin_interview(db_bait.content)
-        first_ai_chat: ChatHistory = ChatHistory(
-            message=first_ai_response, sender=Sender.AI, bait_id=db_bait.id
-        )
         first_ai_chat: ChatHistory = ChatHistory(
             message=first_ai_response, sender=Sender.AI, bait_id=db_bait.id
         )
