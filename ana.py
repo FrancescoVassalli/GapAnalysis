@@ -3,7 +3,7 @@ from typing import List
 
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
-from sqlmodel import delete, select
+from sqlmodel import delete, distinct, select
 
 from db import Database
 from interview_interface import begin_interview, continue_interview
@@ -29,20 +29,43 @@ class ValidTargetsResponse(BaseModel):
     targets: List[str]
 
 
-@router.get("/valid-targets/", response_model=ValidTargetsResponse)
-async def valid_targets(request: Request) -> ValidTargetsResponse:
+@router.get("/valid-targets/")
+async def valid_targets(
+    request: Request, response_model=ValidTargetsResponse
+) -> ValidTargetsResponse:
     target_names = list(target_homepage_dict.keys())
     target_names.remove('jeremy')
     return ValidTargetsResponse(targets=target_names)
+
+
+class TotalBaitsResponse(BaseModel):
+    count: int
+
+
+@router.get("/total-baits/", response_model=TotalBaitsResponse)
+async def get_total_baits(request: Request) -> TotalBaitsResponse:
+    db: Database = request.app.state.db
+    with db.get_session() as session:
+        return TotalBaitsResponse(count=len(session.exec(select(Bait)).all()))
+
+
+@router.get("/total-chat-sessions/", response_model=TotalBaitsResponse)
+async def get_total_chat_sessions(request: Request) -> TotalBaitsResponse:
+    db: Database = request.app.state.db
+    with db.get_session() as session:
+        baits: List[int] = session.exec(select(ChatHistory.bait_id)).all()
+        baits_unique = set(baits)
+        return TotalBaitsResponse(count=len(baits_unique))
 
 
 class ActiveBaitsResponse(BaseModel):
     active_baits: List[Bait]
 
 
-
-@router.get("/active-baits/", response_model=ActiveBaitsResponse)
-async def get_active_baits(request: Request) -> ActiveBaitsResponse:
+@router.get("/active-baits/")
+async def get_active_baits(
+    request: Request, response_model=ActiveBaitsResponse
+) -> ActiveBaitsResponse:
     db: Database = request.app.state.db
     with db.get_session() as session:
         return ActiveBaitsResponse(active_baits=session.exec(select(Bait)).all())
