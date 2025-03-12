@@ -1,4 +1,4 @@
-HOME='''<!DOCTYPE html>
+HOME = '''<!DOCTYPE html>
 <html lang="en-US" class="js csstransitions fontawesome-i2svg-active fontawesome-i2svg-complete"><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="UTF-8">

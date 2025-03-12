@@ -48,7 +48,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
-        version_table='migrations'
+        version_table='migrations',
     )
 
     with context.begin_transaction():
@@ -66,14 +66,14 @@ def run_migrations_online() -> None:
 
     if database_url is None:
         raise Exception("ALEMBIC_DATABASE_URL environment variable is not set.")
-    
+
     connectable = create_engine(database_url)
 
     with connectable.connect() as connection:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
-            version_table='migrations'
+            version_table='migrations',
         )
 
         with context.begin_transaction():
