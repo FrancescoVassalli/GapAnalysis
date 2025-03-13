@@ -30,7 +30,7 @@ const CreateBait: FC = () => {
 
   return (
     <div
-      className="p-4 border border-dashed border-gray-400 rounded hover:bg-gray-100 cursor-pointer"
+      className="p-4 border border-dashed border-gray-400 rounded cursor-pointer"
       onClick={() => toggleShowTargets()}
     >
       <div className="flex items-center justify-center group gap-4">
@@ -38,10 +38,12 @@ const CreateBait: FC = () => {
           <OutlinePlusSquare className="group-hover:hidden text-light-haze-900 dark:text-light-haze-100" />
           <GhostPlusSquare className="hidden group-hover:block text-light-haze-900 dark:text-light-haze-100" />
         </button>
-        <p className="text-center text-blue-500">Create New Bait</p>
+        <p className="font-bold text-light-haze-900 dark:text-dark-haze-50 group-hover:text-light-haze-700 dark:group-hover:text-dark-haze-200">
+          Create New Bait
+        </p>
       </div>
       {showTargets && (
-        <ul>
+        <ul className="flex flex-row items-center justify-center gap-4 mt-4">
           {data.targets.map((target, index) => (
             <li key={index}>
               <TargetButton target_name={target} />
