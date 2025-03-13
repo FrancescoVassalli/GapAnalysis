@@ -207,3 +207,16 @@ async def get_summary(request: Request) -> SummaryResponse:
     with db.get_session() as session:
         summary = summarize(session)
         return SummaryResponse(summary=summary)
+
+
+class ActiveBaitResponse(BaseModel):
+    bait: str
+
+
+@router.get("/active-bait/{bait_id}", response_model=ActiveBaitResponse)
+async def get_active_bait(request: Request, bait_id: int) -> ActiveBaitResponse:
+    db: Database = request.app.state.db
+    with db.get_session() as session:
+        return ActiveBaitResponse(
+            bait=session.query(Bait).where(Bait.id == bait_id).one().content
+        )

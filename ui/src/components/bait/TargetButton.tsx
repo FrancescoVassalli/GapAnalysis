@@ -17,7 +17,7 @@ const TargetButton: FC<TargetButtonProps> = ({ target_name }) => {
   });
 
   return (
-    <button type="button" onClick={() => submitTarget()}>
+    <button type="button" className="p-4 border rounded shadow-sm" onClick={() => submitTarget()}>
       {target_name}
     </button>
   );
