@@ -1,7 +1,7 @@
 import BaitOverview from '@components/bait/BaitOverview';
 import CreateBait from '@components/bait/CreateBait';
-import { createFileRoute } from '@tanstack/react-router';
-export const Route = createFileRoute('/bait')({
+import { Outlet, createFileRoute } from "@tanstack/react-router";
+export const Route = createFileRoute("/bait")({
   component: RouteComponent,
 });
 
@@ -11,8 +11,9 @@ function RouteComponent() {
       <h1 className="text-4xl font-bold text-center mb-6">Bait Summary</h1>
       <div className="space-y-4">
         <CreateBait />
-        <BaitOverview/>
+        <BaitOverview />
       </div>
+      <Outlet />
     </div>
   );
 }

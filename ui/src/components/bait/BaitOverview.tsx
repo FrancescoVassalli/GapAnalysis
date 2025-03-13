@@ -14,7 +14,12 @@ const BaitOverview: FC = () => {
   return (
     <div>
       {data.active_baits?.map((bait) => (
-        <BaitEntry key={bait.id} id={bait.id} name={bait.name} />
+        <BaitEntry
+          key={bait.id}
+          id={bait.id}
+          name={bait.name}
+          isLoading={("isLoading" in bait ? bait.isLoading : false) as boolean}
+        />
       ))}
     </div>
   );
