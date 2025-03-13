@@ -4,3 +4,6 @@ dist/
 
 # Typescript Generated Client
 src/client
+
+# TanStack Generated Route Tree
+src/routeTree.gen.ts
