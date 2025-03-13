@@ -3,23 +3,33 @@ import re
 from difflib import unified_diff
 from typing import Dict, List, Sequence
 
-import requests
 from bs4 import BeautifulSoup
 from openai import OpenAI
 
 from google_reasoning_interface import complete_email_html
 from home_james import HOME as HOME_JAMES
 from home_jeremy import HOME as HOME_JEREMY
+from home_kate import HOME as HOME_KATE
+from home_luca import HOME as HOME_LUCA
 from james_linkedin import PAGE as LINKEDIN_JAMES
 from jeremy_linkedin import PAGE as LINKEDIN_JEREMY
+from kate_linkedin import PAGE as LINKEDIN_KATE
+from luca_linkedin import PAGE as LINKEDIN_LUCA
 
 client = OpenAI()
 
 target_linkedin_dict: Dict[str, str] = {
     'jeremy': LINKEDIN_JEREMY,
     'james': LINKEDIN_JAMES,
+    'luca': LINKEDIN_LUCA,
+    'kate': LINKEDIN_KATE,
 }
-target_homepage_dict: Dict[str, str] = {'jeremy': HOME_JEREMY, 'james': HOME_JAMES}
+target_homepage_dict: Dict[str, str] = {
+    'jeremy': HOME_JEREMY,
+    'james': HOME_JAMES,
+    'luca': HOME_LUCA,
+    'kate': HOME_KATE,
+}
 
 logger = logging.getLogger("phish_interface")
 
