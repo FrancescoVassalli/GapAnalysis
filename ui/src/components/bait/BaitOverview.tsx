@@ -12,7 +12,13 @@ const BaitOverview: FC = () => {
   if (!data || error) return <p>Error fetching active baits</p>;
 
   return (
-    <div>
+    <div
+      style={{
+        maxHeight: "800px",
+        overflowY: "auto",
+        border: "1px solid #ccc", // Optional: for better visibility
+        padding: "10px",
+      }}>
       {data.active_baits?.map((bait) => (
         <BaitEntry
           key={bait.id}

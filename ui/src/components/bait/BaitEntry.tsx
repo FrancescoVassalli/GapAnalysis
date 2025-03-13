@@ -18,7 +18,7 @@ const BaitEntry: FC<BaitEntryProps> = ({ name, id, isLoading }) => {
       <div className="flex flex-col w-full gap-2">
         <h2
           className="text-xl text-light-haze-950 hover:text-light-haze-600  font-semibold cursor-pointer dark:text-dark-haze-50 dark:hover:text-light-haze-200"
-          onClick={() => id && navigate({ to: `/bait/${id}` })}
+          onClick={() => id && navigate({ to: `/chat/${id}` })}
         >
           {name}
         </h2>
