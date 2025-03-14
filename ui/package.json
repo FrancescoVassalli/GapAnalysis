@@ -10,7 +10,7 @@
     "format": "biome format --write",
     "preview": "rsbuild preview",
     "typecheck": "tsc --noEmit",
-    "generate-client": "openapi-ts"
+    "generate-client": "openapi-ts -i ${API_URL:-http://localhost:8080}/openapi.json"
   },
   "dependencies": {
     "@hey-api/client-fetch": "^0.8.3",
