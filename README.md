@@ -58,8 +58,10 @@ Create a `.env` file in the root directory of the project and add the necessary 
 >You can copy [`.env.example`](./.env.example) and rename it to `.env` and fill in the necessary values
 
 ```env
-OPENAI_API_KEY=<your_openai_api_key>
+ALEMBIC_DATABASE_URL=postgresql://<user>:<passcode>@gap-postgres:5432/postgres
+OPENAI_API_KEY=sk-<add-your-key>
 ENV=development
+GEMINI_API_KEY=AI<add-your-key>
 ```
 
 ## Important API Endpoints
