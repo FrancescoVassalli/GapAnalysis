@@ -1,12 +1,14 @@
+import json
 import logging
-from typing import List
+from typing import Iterator, List, Literal
 
 from fastapi import APIRouter, Request
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlmodel import delete, distinct, select
 
 from db import Database
-from interview_interface import begin_interview, continue_interview
+from interview_interface import begin_interview, stream_continue_interview_from_dicts
 from models import Bait, ChatHistory, Sender
 from phish_interface import (
     complete_email_html,
@@ -62,10 +64,8 @@ class ActiveBaitsResponse(BaseModel):
     active_baits: List[Bait]
 
 
-@router.get("/active-baits/")
-async def get_active_baits(
-    request: Request, response_model=ActiveBaitsResponse
-) -> ActiveBaitsResponse:
+@router.get("/active-baits/", response_model=ActiveBaitsResponse)
+async def get_active_baits(request: Request) -> ActiveBaitsResponse:
     db: Database = request.app.state.db
     with db.get_session() as session:
         return ActiveBaitsResponse(active_baits=session.exec(select(Bait)).all())
@@ -121,49 +121,106 @@ class StartChatResponse(BaseModel):
     response: str
 
 
-@router.post("/start-chat/{bait_id}")
-async def start_chat(request: Request, bait_id: int) -> str:
+@router.post("/start-chat/{bait_id}", response_model=StartChatResponse)
+async def start_chat(request: Request, bait_id: int) -> StartChatResponse:
     db: Database = request.app.state.db
     with db.get_session() as session:
+        # Clear previous chat history.
         session.exec(delete(ChatHistory).where(ChatHistory.bait_id == bait_id))
         session.commit()
         db_bait: Bait = session.query(Bait).where(Bait.id == bait_id).one()
+
+        # Create the initial user chat.
         first_chat: ChatHistory = ChatHistory(
             message=db_bait.content, sender=Sender.HUMAN, bait_id=db_bait.id
         )
-        first_ai_response = begin_interview(db_bait.content)
+        session.add(first_chat)
+
+        first_ai_response = begin_interview()
+
         first_ai_chat: ChatHistory = ChatHistory(
             message=first_ai_response, sender=Sender.AI, bait_id=db_bait.id
         )
-        session.add(first_chat)
         session.add(first_ai_chat)
         session.commit()
         return StartChatResponse(response=first_ai_response)
 
 
-class AddChatResponse(BaseModel):
+class StreamAddChatResponse(BaseModel):
     response: str
 
 
-@router.post("/add-chat/{bait_id}/{user_message}")
-async def add_chat(request: Request, bait_id: int, user_message: str) -> str:
-    db: Database = request.app.state.db
+class UserMessageRequest(BaseModel):
+    user_message: str
+
+
+@router.post(
+    "/stream-add-chat/{bait_id}",
+    summary="Stream add chat (final response)",
+    response_class=StreamingResponse,
+    responses={
+        200: {
+            "description": "A streaming response of chat tokens",
+            "content": {
+                "text/event-stream": {
+                    "schema": {
+                        "type": "string",
+                        "example": (
+                            "data: {\"data\": \"Hello\"}\n"
+                            "\ndata: {\"data\": \"World\"}\n\n"
+                        ),
+                    }
+                }
+            },
+        },
+    },
+)
+def stream_add_chat(request: Request, bait_id: int, payload: UserMessageRequest):
+    user_message = payload.user_message
+    db = request.app.state.db
+
+    # Save the user's message to the database.
     with db.get_session() as session:
-        old_chats: List[ChatHistory] = (
+        existing_chats = (
             session.query(ChatHistory).where(ChatHistory.bait_id == bait_id).all()
         )
-        new_user_chat: ChatHistory = ChatHistory(
+        new_user_chat = ChatHistory(
             message=user_message, sender=Sender.HUMAN, bait_id=bait_id
         )
         session.add(new_user_chat)
-        old_chats.append(new_user_chat)
-        new_ai_message = continue_interview(old_chats)
-        new_ai_chat: ChatHistory = ChatHistory(
-            message=new_ai_message, sender=Sender.AI, bait_id=bait_id
-        )
-        session.add(new_ai_chat)
         session.commit()
-        return AddChatResponse(response=new_ai_message)
+        existing_chats.append(new_user_chat)
+        chats_dict = [chat.get_message_dict() for chat in existing_chats]
+
+    # Create an initial (empty) record for the AI's streaming message.
+    with db.get_session() as session:
+        ai_chat = ChatHistory(message="", sender=Sender.AI, bait_id=bait_id)
+        session.add(ai_chat)
+        session.commit()
+        ai_chat_id = ai_chat.id  # Ensure your ChatHistory model has an "id" attribute.
+
+    def event_generator() -> Iterator[str]:
+        accumulated_message = ""
+        # Stream tokens from OpenAI.
+        for token in stream_continue_interview_from_dicts(chats_dict):
+            accumulated_message += token
+
+            # Update the AI chat record incrementally with the new message.
+            with db.get_session() as session:
+                session.query(ChatHistory).filter(ChatHistory.id == ai_chat_id).update(
+                    {"message": accumulated_message}
+                )
+                session.commit()
+
+            # Format the token as a server-sent event.
+            if token == "[END]":
+                # Append a marker so the client knows the stream has ended.
+                token_with_marker = token + " END STREAM"
+                yield f"data: {json.dumps({'data': token_with_marker})}\n\n"
+                break
+            yield f"data: {json.dumps({'data': token})}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
 class ChatResponse(BaseModel):
@@ -186,7 +243,12 @@ async def get_chats(request: Request):
 
 
 class AllBaitChatResponse(BaseModel):
-    content: str
+
+    class Message(BaseModel):
+        type: Literal["user", "assistant"]
+        message: str
+
+    messages: List[Message]
 
 
 @router.get("/all-bait-chat/{bait_id}", response_model=AllBaitChatResponse)
@@ -194,7 +256,7 @@ async def get_all_chats_for_bait(request: Request, bait_id: int) -> AllBaitChatR
     db: Database = request.app.state.db
     with db.get_session() as session:
         content = collect_chats_in_paragraph_format(session, bait_id)
-        return AllBaitChatResponse(content=content)
+        return AllBaitChatResponse(messages=content)
 
 
 class SummaryResponse(BaseModel):

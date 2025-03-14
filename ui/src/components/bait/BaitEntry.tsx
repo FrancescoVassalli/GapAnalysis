@@ -23,7 +23,18 @@ const BaitEntry: FC<BaitEntryProps> = ({ name, id, isLoading }) => {
           {name}
         </h2>
         {!isLoading && <p>ID: {id} </p>}
-        {isLoading && <p>ID: {<LoadingSpinner width={3} border={1} />}</p>}
+        {isLoading && (
+          <p>
+            ID:{" "}
+            {
+              <LoadingSpinner
+                width={1}
+                strokeWidth={2}
+                className="inline-block"
+              />
+            }
+          </p>
+        )}
       </div>
       {isLoading ? (
         <LoadingSpinner />

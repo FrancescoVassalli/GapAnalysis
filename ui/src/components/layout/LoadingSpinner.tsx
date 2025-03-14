@@ -4,29 +4,50 @@ interface LoadingSpinnerProps {
   className?: string;
   width?: number | string;
   height?: number | string;
-  border?: number | string;
+  strokeWidth?: number | string;
+  color?: string;
 }
 
 const LoadingSpinner: FC<LoadingSpinnerProps> = ({
   className = "",
-  width = "5",
-  height = "5",
-  border = "4",
+  width = 2,
+  height = 2,
+  strokeWidth = 3,
+  color = "currentColor",
 }) => {
-  // if only width is given, set height to width
-  if (typeof width === "number" && typeof height === "string") {
-    height = width;
-  }
-
-  // if only height is given, set width to height
-  if (typeof height === "number" && typeof width === "string") {
-    width = height;
-  }
+  // Convert numbers to rem (for width/height) and px (for strokeWidth) respectively.
+  const computedWidth = typeof width === "number" ? `${width}rem` : width;
+  const computedHeight = typeof height === "number" ? `${height}rem` : height;
+  const computedStrokeWidth =
+    typeof strokeWidth === "number" ? `${strokeWidth}px` : strokeWidth;
 
   return (
-    <div
-      className={`inline-block h-${height} w-${width} animate-spin rounded-full border-${border} border-solid border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite] ${className}`}
-    />
+    <svg
+      style={{ width: computedWidth, height: computedHeight }}
+      className={`animate-spin ${className}`}
+      viewBox="0 0 50 50"
+    >
+      <circle
+        className="opacity-25"
+        cx="25"
+        cy="25"
+        r="20"
+        stroke={color}
+        strokeWidth={computedStrokeWidth}
+        fill="none"
+      />
+      <circle
+        className="opacity-95"
+        cx="25"
+        cy="25"
+        r="20"
+        stroke={color}
+        strokeWidth={computedStrokeWidth}
+        fill="none"
+        strokeDasharray="31.415, 31.415"
+        strokeDashoffset="0"
+      />
+    </svg>
   );
 };
 
