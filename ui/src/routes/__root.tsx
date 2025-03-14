@@ -46,8 +46,12 @@ function RootComponent() {
       <Skeleton>
         <reactRouter.Outlet />
       </Skeleton>
-      <TanStackRouterDevtools position="bottom-right" />
-      <ReactQueryDevtools buttonPosition="bottom-left" />
+      {process.env.NODE_ENV === "development" && (
+        <>
+          <TanStackRouterDevtools position="bottom-right" />
+          <ReactQueryDevtools buttonPosition="bottom-left" />
+        </>
+      )}
     </QueryClientProvider>
   );
 }
