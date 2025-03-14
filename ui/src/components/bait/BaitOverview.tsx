@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import type { FC } from "react";
-import { getActiveBaitsMockActiveBaitsGetOptions } from "src/client/@tanstack/react-query.gen";
-import BaitEntry from "./BaitEntry";
+import { useQuery } from '@tanstack/react-query';
+import type { FC } from 'react';
+import { getActiveBaitsMockActiveBaitsGetOptions } from 'src/client/@tanstack/react-query.gen';
+import BaitEntry from './BaitEntry';
 
 const BaitOverview: FC = () => {
   const { data, isLoading, error } = useQuery({
@@ -22,10 +22,10 @@ const BaitOverview: FC = () => {
   return (
     <div
       style={{
-        maxHeight: "800px",
-        overflowY: "auto",
-        border: "1px solid #ccc",
-        padding: "10px",
+        maxHeight: '800px',
+        overflowY: 'auto',
+        border: '1px solid #ccc',
+        padding: '10px',
       }}
     >
       {data.active_baits?.map((bait) => (
@@ -33,7 +33,7 @@ const BaitOverview: FC = () => {
           key={bait.id}
           id={bait.id}
           name={bait.name}
-          isLoading={("isLoading" in bait ? bait.isLoading : false) as boolean}
+          isLoading={('isLoading' in bait ? bait.isLoading : false) as boolean}
         />
       ))}
     </div>

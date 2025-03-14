@@ -9,13 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    environment:
+      name: production-ui
+      url: https://ui-8c9fp.ondigitalocean.app
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Change to UI directory
-        run: cd ui
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -23,18 +22,14 @@ jobs:
           node-version: "22"
 
       - name: Install dependencies
+        working-directory: ui
         run: npm install
 
       - name: Build project
+        working-directory: ui
         env:
           API_URL: https://api-5eznc.ondigitalocean.app
         run: npm run generate-client && npm run build
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: ui-build
-          path: dist/
 
       - name: Build Docker image
         env:
@@ -44,7 +39,7 @@ jobs:
         run: |
           # Login to Docker registry
           docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_NAME
-          # Build Docker image
+          # Build Docker image using the Dockerfile in the build folder from the repository root context
           docker build -f build/ui.Dockerfile -t ${REGISTRY_NAME}/gap-analysis/ui:latest .
-          # Push Docker image
+          # Push Docker image to the registry
           docker push ${REGISTRY_NAME}/gap-analysis/ui:latest

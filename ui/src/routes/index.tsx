@@ -1,12 +1,12 @@
-import Counter from "@components/bait/Counter";
-import SummaryUI from "@components/bait/Summary";
-import { createFileRoute } from "@tanstack/react-router";
+import Counter from '@components/bait/Counter';
+import SummaryUI from '@components/bait/Summary';
+import { createFileRoute } from '@tanstack/react-router';
 import {
   getTotalBaitsMockTotalBaitsGetOptions,
   getTotalChatSessionsMockTotalChatSessionsGetOptions,
-} from "src/client/@tanstack/react-query.gen";
+} from 'src/client/@tanstack/react-query.gen';
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   component: () => {
     return (
       <div className="p-6 space-y-8 min-h-screen bg-light-haze-50 dark:bg-dark-haze-950">

@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "rsbuild build",
-    "check": "biome check --write",
+    "check": "biome check --config-path ../biome.json --write",
     "dev": "rsbuild dev",
-    "format": "biome format --write",
+    "format": "biome format --config-path ../biome.json  --write",
     "preview": "rsbuild preview",
     "typecheck": "tsc --noEmit",
     "generate-client": "openapi-ts -i ${API_URL:-http://localhost:8000}/openapi.json"

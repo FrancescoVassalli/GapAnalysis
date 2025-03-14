@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import type { FC } from 'react';
 
 interface LoadingSpinnerProps {
   className?: string;
@@ -9,17 +9,17 @@ interface LoadingSpinnerProps {
 }
 
 const LoadingSpinner: FC<LoadingSpinnerProps> = ({
-  className = "",
+  className = '',
   width = 2,
   height = 2,
   strokeWidth = 3,
-  color = "currentColor",
+  color = 'currentColor',
 }) => {
   // Convert numbers to rem (for width/height) and px (for strokeWidth) respectively.
-  const computedWidth = typeof width === "number" ? `${width}rem` : width;
-  const computedHeight = typeof height === "number" ? `${height}rem` : height;
+  const computedWidth = typeof width === 'number' ? `${width}rem` : width;
+  const computedHeight = typeof height === 'number' ? `${height}rem` : height;
   const computedStrokeWidth =
-    typeof strokeWidth === "number" ? `${strokeWidth}px` : strokeWidth;
+    typeof strokeWidth === 'number' ? `${strokeWidth}px` : strokeWidth;
 
   return (
     <svg

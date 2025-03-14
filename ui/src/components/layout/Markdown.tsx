@@ -1,7 +1,7 @@
-import { Children, type FC, memo, ReactNode } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkBreaks from "remark-breaks";
-import remarkGfm from "remark-gfm";
+import { Children, type FC, type ReactNode, memo } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
+import remarkGfm from 'remark-gfm';
 
 interface CodeProps extends React.HTMLAttributes<HTMLElement> {
   inline?: boolean;
@@ -11,7 +11,7 @@ interface CodeProps extends React.HTMLAttributes<HTMLElement> {
 
 export const CodeBlock: FC<CodeProps> = memo(
   ({ inline, className, children, ...props }) => {
-    const content = children?.toString() || "";
+    const content = children?.toString() || '';
     if (inline) {
       return (
         <code className="bg-gray-100 p-1 rounded" {...props}>
@@ -19,7 +19,7 @@ export const CodeBlock: FC<CodeProps> = memo(
         </code>
       );
     }
-    if (className?.includes("language-markdown")) {
+    if (className?.includes('language-markdown')) {
       return (
         <div className="prose max-w-full bg-gray-50 p-2 rounded overflow-x-auto">
           <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
@@ -33,7 +33,7 @@ export const CodeBlock: FC<CodeProps> = memo(
         <code className={className}>{content}</code>
       </pre>
     );
-  }
+  },
 );
 
 type MarkdownProps = {
@@ -48,10 +48,10 @@ export const Markdown: FC<MarkdownProps> = ({ text }) => {
         p: ({ node, children, ...props }) => {
           // Combine text nodes for analysis.
           const textContent = Children.toArray(children)
-            .filter((child) => typeof child === "string")
-            .join("");
+            .filter((child) => typeof child === 'string')
+            .join('');
           // Apply extra margin only if there's at least one newline character.
-          const marginClass = textContent.includes("\n") ? "mb-6" : "mb-2";
+          const marginClass = textContent.includes('\n') ? 'mb-6' : 'mb-2';
           return (
             <p
               className={`whitespace-pre-wrap break-words ${marginClass}`}

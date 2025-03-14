@@ -1,10 +1,10 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { FC } from "react";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { FC } from 'react';
 import {
   type ActiveBaitsResponse,
   baitMockBaitTargetNameGet,
-} from "src/client";
-import { getActiveBaitsMockActiveBaitsGetQueryKey } from "src/client/@tanstack/react-query.gen";
+} from 'src/client';
+import { getActiveBaitsMockActiveBaitsGetQueryKey } from 'src/client/@tanstack/react-query.gen';
 
 interface TargetButtonProps {
   target_name: string;
@@ -36,7 +36,7 @@ const TargetButton: FC<TargetButtonProps> = ({ target_name }) => {
           ...old,
           active_baits: [
             ...old.active_baits,
-            { name: target_name, id: null, content: "", isLoading: true },
+            { name: target_name, id: null, content: '', isLoading: true },
           ],
         };
 
@@ -50,7 +50,7 @@ const TargetButton: FC<TargetButtonProps> = ({ target_name }) => {
       queryClient.invalidateQueries({ queryKey });
     },
     onError: (error, _variables, context) => {
-      console.error("Mutation error:", error);
+      console.error('Mutation error:', error);
       // Optionally rollback to previous data if needed
       if (context?.existingData) {
         queryClient.setQueryData(queryKey, context.existingData);

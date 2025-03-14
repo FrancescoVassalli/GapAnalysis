@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { FC } from "react";
+import { useQuery } from '@tanstack/react-query';
+import type { FC } from 'react';
 
 interface CounterProps {
   label: string;
@@ -7,6 +7,7 @@ interface CounterProps {
 }
 
 const Counter: FC<CounterProps> = ({ label, queryMethod }) => {
+  // biome-ignore lint/suspicious/noExplicitAny: We cant infer the type as the queryMethod is dynamic
   const { data, isLoading, error } = useQuery<any>({
     ...queryMethod(),
   });
