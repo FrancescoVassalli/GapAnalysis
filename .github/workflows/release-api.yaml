@@ -22,7 +22,7 @@ jobs:
         run: |
           # Login to Docker registry
           docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_NAME
-          # Build Docker image
-          docker build -f api/Dockerfile -t ${REGISTRY_NAME}/gap-analysis/api:latest .
-          # Push Docker image
+          # Build Docker image using the specified Dockerfile
+          docker build -f build/api.Dockerfile -t ${REGISTRY_NAME}/gap-analysis/api:latest .
+          # Push Docker image to the registry
           docker push ${REGISTRY_NAME}/gap-analysis/api:latest
