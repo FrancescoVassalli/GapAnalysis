@@ -1,21 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { FC } from "react";
-import {
-  type SummaryResponse,
-  getSummaryMockSummaryGet,
-} from "src/client";
+import { type SummaryResponse, getSummaryMockSummaryGet } from "src/client";
 import { getSummaryMockSummaryGetQueryKey } from "src/client/@tanstack/react-query.gen";
 
 const SummaryButton: FC = () => {
   const queryClient = useQueryClient();
 
   const summaryQueryKey = getSummaryMockSummaryGetQueryKey();
-  
 
   const mutation = useMutation({
-    mutationFn: async () =>
-      await getSummaryMockSummaryGet(),
-      onMutate: async () => {
+    mutationFn: async () => await getSummaryMockSummaryGet(),
+    onMutate: async () => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({ queryKey: summaryQueryKey });
