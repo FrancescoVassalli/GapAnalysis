@@ -1,5 +1,5 @@
 import Counter from '@components/bait/Counter';
-import SummaryButton from '@components/bait/SummaryButton';
+import SummaryUI from '@components/bait/Summary';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/')({
@@ -15,8 +15,6 @@ export const Route = createFileRoute('/')({
             Advanced Gap Analysis Process (AGAP)
           </h1>
         </div>
-
-        {/* Recent Lessons & Chats */}
         <div>
           <h2 className="text-xl font-semibold text-light-haze-800 dark:text-light-haze-200">
             Bait Campaign KPI
@@ -26,14 +24,11 @@ export const Route = createFileRoute('/')({
             <Counter label="Gap Analysis Interviews"/>
           </div>
         </div>
-
         <div>
           <h2 className="text-xl font-semibold text-light-haze-800 dark:text-light-haze-200">
             Gap Insights
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
-            <SummaryButton/>
-          </div>
+          <SummaryUI/>
         </div>
       </div>
     );
