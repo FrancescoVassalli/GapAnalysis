@@ -1,8 +1,12 @@
-import Counter from '@components/bait/Counter';
-import SummaryUI from '@components/bait/Summary';
-import { createFileRoute } from '@tanstack/react-router';
+import Counter from "@components/bait/Counter";
+import SummaryUI from "@components/bait/Summary";
+import { createFileRoute } from "@tanstack/react-router";
+import {
+  getTotalBaitsMockTotalBaitsGetOptions,
+  getTotalChatSessionsMockTotalChatSessionsGetOptions,
+} from "src/client/@tanstack/react-query.gen";
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   component: () => {
     return (
       <div className="p-6 space-y-8 min-h-screen bg-light-haze-50 dark:bg-dark-haze-950">
@@ -20,15 +24,21 @@ export const Route = createFileRoute('/')({
             Bait Campaign KPI
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-            <Counter label="Total Baits"/>
-            <Counter label="Gap Analysis Interviews"/>
+            <Counter
+              label="Total Baits"
+              queryMethod={getTotalBaitsMockTotalBaitsGetOptions}
+            />
+            <Counter
+              label="Gap Analysis Interviews"
+              queryMethod={getTotalChatSessionsMockTotalChatSessionsGetOptions}
+            />
           </div>
         </div>
         <div>
           <h2 className="text-xl font-semibold text-light-haze-800 dark:text-light-haze-200">
             Gap Insights
           </h2>
-          <SummaryUI/>
+          <SummaryUI />
         </div>
       </div>
     );

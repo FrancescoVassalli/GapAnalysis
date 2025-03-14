@@ -80,3 +80,47 @@ Inside the Debug side bar you can Launch the services defined in [`.vscode/launc
 ### Setting up database
 
 Run this command in the dev container to write the schema to the 
+
+### Deployment to Docker Containers
+
+This project includes Docker configurations for both the API and the UI. The `build` folder contains the necessary production Dockerfiles.
+
+#### Building the API Docker Image
+
+To build the Docker image for the API, navigate to the `build/api` directory and run the following command:
+
+```sh
+docker build -f build/api.Dockerfile -t gap-analysis-api .
+```
+
+#### Building the UI Docker Image
+
+Before building the Docker image for the UI, you need to build the static files using npm. Navigate to the root directory of the project and run:
+
+```sh
+npm run build
+```
+
+After the build process is complete, navigate to the `build/ui` directory and run the following command to build the Docker image:
+
+```sh
+docker build -f build/ui.Dockerfile -t gap-analysis-ui .
+```
+
+### Deploying Docker Images
+
+Once the Docker images are built, you can deploy them to any cloud provider that supports Docker, such as Digital Ocean, GCP, AWS, and more.
+
+#### Example Deployment to Cloud
+
+1. Push the Docker images to a container registry (e.g., Docker Hub, Digital Ocean Container Registry, Githube Container Registry, etc).
+2. Run the Docker containers using the pulled images.
+
+```sh
+docker run -d --rm --name api -p 8000:8000 gap-analysis-api
+docker run -d --rm --name ui -p 3000:3000 gap-analysis-ui
+```
+
+This will start the API on port `8000` and the UI on port `300`.
+
+For more detailed instructions on deploying to other cloud providers, refer to their respective documentation.

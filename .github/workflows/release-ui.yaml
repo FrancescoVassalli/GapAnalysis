@@ -1,0 +1,50 @@
+name: Release UI
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Change to UI directory
+        run: cd ui
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        env:
+          API_URL: https://api-5eznc.ondigitalocean.app
+        run: npm run generate-client && npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ui-build
+          path: dist/
+
+      - name: Build Docker image
+        env:
+          REGISTRY_NAME: ${{ secrets.REGISTRY_NAME }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        run: |
+          # Login to Docker registry
+          docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_NAME
+          # Build Docker image
+          docker build -f build/ui.Dockerfile -t ${REGISTRY_NAME}/gap-analysis/ui:latest .
+          # Push Docker image
+          docker push ${REGISTRY_NAME}/gap-analysis/ui:latest

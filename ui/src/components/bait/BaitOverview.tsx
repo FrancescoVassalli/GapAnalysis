@@ -11,6 +11,14 @@ const BaitOverview: FC = () => {
   if (isLoading) return <p>Loading...</p>;
   if (!data || error) return <p>Error fetching active baits</p>;
 
+  if (data.active_baits?.length === 0) {
+    return (
+      <p className="text-center">
+        No active baits available - Please add a new bait above
+      </p>
+    );
+  }
+
   return (
     <div
       style={{
