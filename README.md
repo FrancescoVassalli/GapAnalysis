@@ -1,6 +1,6 @@
 # Gap Analysis
 
-A hackathon demo for finding gaps in corporate anti-phising processes.
+A [hackathon](https://devpost.com/software/gap-analysis) demo for finding gaps in corporate anti-phishing processes.
 
 <!-- add demo photo from docs/demo.webp -->
 <p align="center">
@@ -15,6 +15,7 @@ A hackathon demo for finding gaps in corporate anti-phising processes.
 - [Setup](#setup)
   - [Environment Variables](#environment-variables)
 - [Important API Endpoints](#important-api-endpoints)
+- [Architecture Overview](#architecture-overview)
 - [Dev Container](#dev-container)
   - [Prerequisites](#prerequisites)
   - [Open the Dev Container](#open-the-dev-container)
@@ -43,12 +44,16 @@ code .
 
 ## Setup
 
-You can manually run a docker-compose environment or if you have Visual Studio Code with the Remote Containers extension you can use the [Dev Container](#dev-container) configuration.
+You can manually run a Docker Compose environment or if you have Visual Studio Code with the Remote Containers extension you can use the [Dev Container](#dev-container) configuration.
 
 1. Setup your `.env` - [see steps below](#environment-variables)
-2. Have docker engine running on your system
+2. Have Docker Engine running on your system
 3. In this directory `docker compose -f .devcontainer/docker-compose.yml up -d`
 4. Go to `localhost:8000` to access the API
+
+>[!NOTE]
+>
+> Your version of Docker Compose must be 2.0.0 or higher to use the `docker compose` command. Otherwise, you can use the `docker-compose` command.
 
 ### Environment Variables
 
@@ -66,7 +71,7 @@ GEMINI_API_KEY=AI<add-your-key>
 
 ## Important API Endpoints
 
-FastAPI has a built in Swagger UI that can be accessed at `localhost:8000/docs` or `localhost:8000/redoc`
+FastAPI has a built-in Swagger UI that can be accessed at `localhost:8000/docs` or `localhost:8000/redoc`
 
 ## Architecture Overview
 
@@ -114,7 +119,7 @@ For more information, please see the [extension documentation](https://marketpla
 
 ### Running Services
 
-This repo contains pre-configrued launch commands for the most common applications
+This repo contains pre-configured launch commands for the most common applications
 
 In VS Code open the [Run and Debug](https://code.visualstudio.com/docs/editor/debugging) section or by pressing `F5`
 
@@ -126,7 +131,11 @@ Inside the Debug side bar you can Launch the services defined in [`.vscode/launc
 
 ### Setting up database
 
-Run this command in the dev container to write the schema to the 
+Run this command in the dev container to write the schema to the database
+
+```bash
+poetry run alembic upgrade head
+```
 
 ### Deployment to Docker Containers
 
@@ -160,7 +169,7 @@ Once the Docker images are built, you can deploy them to any cloud provider that
 
 #### Example Deployment to Cloud
 
-1. Push the Docker images to a container registry (e.g., Docker Hub, Digital Ocean Container Registry, Githube Container Registry, etc).
+1. Push the Docker images to a container registry (e.g., Docker Hub, Digital Ocean Container Registry, GitHub Container Registry, etc).
 2. Run the Docker containers using the pulled images.
 
 ```sh
@@ -168,6 +177,6 @@ docker run -d --rm --name api -p 8000:8000 gap-analysis-api
 docker run -d --rm --name ui -p 3000:3000 gap-analysis-ui
 ```
 
-This will start the API on port `8000` and the UI on port `300`.
+This will start the API on port `8000` and the UI on port `3000`.
 
 For more detailed instructions on deploying to other cloud providers, refer to their respective documentation.
