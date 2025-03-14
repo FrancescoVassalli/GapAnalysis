@@ -29,7 +29,7 @@ const SummaryUI: FC = () => {
       {!isLoading && summaryData && summaryData.summary && (
         <div className="p-4 w-full text-left shadow-xl rounded-2xl border border-gray-300 max-h-96 overflow-y-auto">
           <div className="flex flex-col items-center">
-            <span className="text-m text-light-haze-800 dark:text-light-haze-200">
+            <span className="w-full text-m text-light-haze-800 dark:text-light-haze-200">
               <Markdown text={summaryData.summary} />
             </span>
           </div>
@@ -43,7 +43,7 @@ const SummaryUI: FC = () => {
           className="p-4 border border-solid border-gray-400 rounded cursor-pointer hover:bg-light-haze-200 dark:hover:bg-dark-haze-800 disabled:cursor-not-allowed"
           disabled={isLoading}
         >
-          {isLoading ? 'Generating ...' : 'Generate Summary'}
+          {isLoading ? "Generating ..." : "Generate Summary"}
         </button>
       )}
     </div>
