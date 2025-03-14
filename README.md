@@ -82,12 +82,14 @@ The project is structured as follows:
   - ORM: [Alembic](https://alembic.sqlalchemy.org/)
   - Formatting and Linting: [Black](https://black.readthedocs.io/en/stable/), [isort](https://pycqa.github.io/isort/)
   - Testing: [Pytest](https://docs.pytest.org/en/7.0.x/)
+  - Schema Management: [OpenAPI](https://fastapi.tiangolo.com/reference/openapi/docs/)
 - **Frontend**: [React](https://reactjs.org/)
   - Router: [TanStack Router](https://tanstack.com/router)
   - State Management: [TanStack Query](https://tanstack.com/query)
   - Styles: [Tailwind CSS](https://tailwindcss.com/)
   - Icons: [Scarlab](https://scarlab-icons.la-moore.ru/)
   - Formatting and Linting: [Biome](https://biomejs.dev/)
+  - API Client: [OpenAPI Generator](https://heyapi.dev/)
 - **Database**: [PostgreSQL](https://www.postgresql.org/)
 - **LLM Providers**: [OpenAI](https://openai.com/api/) and [Google Gemini](https://aistudio.google.com/welcome)
 - **Containerization**: [Docker](https://www.docker.com/)
@@ -128,6 +130,10 @@ Inside the Debug side bar you can Launch the services defined in [`.vscode/launc
 - `Run Uvicorn`: Launches the FastAPI server
 
 >Alternatively you can run `poetry run uvicorn main:app --host 0.0.0.0 --port 8000 --reload` in the integrated terminal
+
+- `Run Website`: Generates the OpenAPI client from the FastAPI server and starts the React app
+
+>Alternatively you can run `npm run generate-client` or `npm run dev` in the integrated terminal
 
 ### Setting up database
 
