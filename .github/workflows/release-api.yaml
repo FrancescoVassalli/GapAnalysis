@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**/*.py'
+      - 'pyproject.toml'
+      - 'poetry.toml'
+      - 'migrations'
+      - 'build/api.Dockerfile'
   workflow_dispatch:
 
 jobs:
