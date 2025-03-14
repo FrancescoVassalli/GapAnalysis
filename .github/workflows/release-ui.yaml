@@ -34,8 +34,6 @@ jobs:
           REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
-          pwd
-          ls -al
           # Login to Docker registry
           docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_NAME
           # Build Docker image using the Dockerfile in the build folder from the repository root context
