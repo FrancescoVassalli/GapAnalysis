@@ -1,13 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, useParams } from "@tanstack/react-router";
-import { getActiveBaitMockActiveBaitBaitIdGetOptions } from "src/client/@tanstack/react-query.gen";
+import { useQuery } from '@tanstack/react-query';
+import { createFileRoute, useParams } from '@tanstack/react-router';
+import { getActiveBaitMockActiveBaitBaitIdGetOptions } from 'src/client/@tanstack/react-query.gen';
 
-export const Route = createFileRoute("/bait/$baitId")({
+export const Route = createFileRoute('/bait/$baitId')({
   component: BaitView,
 });
 
 function BaitView() {
-  const { baitId = "1" } = useParams({ from: "/bait/$baitId" });
+  const { baitId = '1' } = useParams({ from: '/bait/$baitId' });
   const { data } = useQuery({
     ...getActiveBaitMockActiveBaitBaitIdGetOptions({
       path: { bait_id: baitId },

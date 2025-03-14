@@ -1,14 +1,14 @@
-import { GhostPlusSquare, OutlinePlusSquare } from "@scarlab-icons/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { FC } from "react";
-import { validTargetsMockValidTargetsGetOptions } from "src/client/@tanstack/react-query.gen";
-import TargetButton from "./TargetButton";
+import { GhostPlusSquare, OutlinePlusSquare } from '@scarlab-icons/react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { FC } from 'react';
+import { validTargetsMockValidTargetsGetOptions } from 'src/client/@tanstack/react-query.gen';
+import TargetButton from './TargetButton';
 
 const CreateBait: FC = () => {
   const queryClient = useQueryClient();
 
   const { data: showTargets } = useQuery({
-    queryKey: ["showTargets"],
+    queryKey: ['showTargets'],
     queryFn: () => false,
     staleTime: Number.POSITIVE_INFINITY,
   });
@@ -16,7 +16,7 @@ const CreateBait: FC = () => {
   const { mutate: toggleShowTargets } = useMutation<boolean, Error, void>({
     mutationFn: async () => !showTargets,
     onSuccess: (newValue) => {
-      queryClient.setQueryData<boolean>(["showTargets"], newValue);
+      queryClient.setQueryData<boolean>(['showTargets'], newValue);
     },
   });
 

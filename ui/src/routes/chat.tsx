@@ -1,15 +1,15 @@
 import Sidebar from '@components/layout/Sidebar';
 import Wrapper from '@components/layout/Wrapper';
 import { SolidChat } from '@scarlab-icons/react';
-import { useQuery } from "@tanstack/react-query";
-import { Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
-import { getChatsMockChatsGetOptions } from "src/client/@tanstack/react-query.gen";
+import { useQuery } from '@tanstack/react-query';
+import { Outlet, createFileRoute, useLocation } from '@tanstack/react-router';
+import { getChatsMockChatsGetOptions } from 'src/client/@tanstack/react-query.gen';
 
-export const Route = createFileRoute("/chat")({ component: ChatLayout });
+export const Route = createFileRoute('/chat')({ component: ChatLayout });
 
 function ChatLayout() {
   const { pathname } = useLocation();
-  const activeId = Number(pathname.split("/").pop() || 1);
+  const activeId = Number(pathname.split('/').pop() || 1);
   const { data = [] } = useQuery(getChatsMockChatsGetOptions());
   const items = data.map((item) => ({
     ...item,

@@ -1,17 +1,17 @@
-import LoadingSpinner from "@components/layout/LoadingSpinner";
-import { GhostMail } from "@scarlab-icons/react";
-import { Link, useNavigate } from "@tanstack/react-router";
-import type { FC } from "react";
-import type { Bait } from "src/client";
+import LoadingSpinner from '@components/layout/LoadingSpinner';
+import { GhostMail } from '@scarlab-icons/react';
+import { Link, useNavigate } from '@tanstack/react-router';
+import type { FC } from 'react';
+import type { Bait } from 'src/client';
 
 interface BaitEntryProps {
-  name: Bait["name"];
-  id: Bait["id"];
+  name: Bait['name'];
+  id: Bait['id'];
   isLoading: boolean;
 }
 
 const BaitEntry: FC<BaitEntryProps> = ({ name, id, isLoading }) => {
-  const navigate = useNavigate({ from: "/bait" });
+  const navigate = useNavigate({ from: '/bait' });
 
   return (
     <div className="p-4 border rounded shadow-sm flex items-center my-2 hover:shadow-xl">
@@ -25,7 +25,7 @@ const BaitEntry: FC<BaitEntryProps> = ({ name, id, isLoading }) => {
         {!isLoading && <p>ID: {id} </p>}
         {isLoading && (
           <p>
-            ID:{" "}
+            ID:{' '}
             {
               <LoadingSpinner
                 width={1}
