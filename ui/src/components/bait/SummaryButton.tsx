@@ -1,34 +1,62 @@
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { getSummaryMockSummaryGetOptions } from "src/client/@tanstack/react-query.gen";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { FC } from "react";
+import {
+  type SummaryResponse,
+  getSummaryMockSummaryGet,
+} from "src/client";
+import { getSummaryMockSummaryGetQueryKey } from "src/client/@tanstack/react-query.gen";
 
-export default function GenerateButton() {
-  const [enabled, setEnabled] = useState(false);
+const SummaryButton: FC = () => {
+  const queryClient = useQueryClient();
 
-  const queryOptions = getSummaryMockSummaryGetOptions();
-  const { data, isFetching } = useQuery({
-    ...queryOptions,
-    enabled,
-    onSuccess: () => setEnabled(false),
+  const summaryQueryKey = getSummaryMockSummaryGetQueryKey();
+  
+
+  const mutation = useMutation({
+    mutationFn: async () =>
+      await getSummaryMockSummaryGet(),
+      onMutate: async () => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: summaryQueryKey });
+
+      // Snapshot the previous value
+      const existingData = queryClient.getQueryData(summaryQueryKey);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(summaryQueryKey, (old: SummaryResponse) => {
+        const optimisticData = {
+          ...old,
+          summary: "",
+        };
+
+        return optimisticData;
+      });
+
+      return { existingData };
+    },
+    onSuccess: (summary_response) => {
+      queryClient.setQueryData(summaryQueryKey, summary_response.data);
+    },
+    onError: (error, _variables, context) => {
+      console.error("Mutation error:", error);
+      // Optionally rollback to previous data if needed
+      if (context?.existingData) {
+        queryClient.setQueryData(summaryQueryKey, context.existingData);
+      }
+    },
   });
 
   return (
     <button
-        onClick={() => setEnabled(true)}
-        disabled={isFetching}
-        className={`flex items-center justify-center px-4 py-2 rounded-lg transition-colors duration-300
-            ${isFetching ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}
-            shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50`}
+      type="button"
+      onClick={() => mutation.mutate()}
+      className="p-4 border border-solid border-gray-400 rounded cursor-pointer"
+      disabled={mutation.isPending}
     >
-        {isFetching ? (
-            <div>
-            <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0115.657-2.343A8 8 0 1012 4v8h8a8 8 0 00-8 8z" />
-            </svg>
-            "Generating..."
-            </div>) : ("Generate")
-        }
+      {mutation.isPending ? "Generating ..." : "Generate Summary"}
     </button>
   );
-}
+};
+
+export default SummaryButton;

@@ -16,7 +16,7 @@ const BaitOverview: FC = () => {
       style={{
         maxHeight: "800px",
         overflowY: "auto",
-        border: "1px solid #ccc", // Optional: for better visibility
+        border: "1px solid #ccc",
         padding: "10px",
       }}
     >
