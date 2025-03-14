@@ -47,7 +47,6 @@ const TargetButton: FC<TargetButtonProps> = ({ target_name }) => {
       return { existingData };
     },
     onSuccess: () => {
-      console.log("Mutation succeeded, invalidating active baits query");
       queryClient.invalidateQueries({ queryKey });
     },
     onError: (error, _variables, context) => {

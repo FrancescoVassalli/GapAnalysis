@@ -18,7 +18,8 @@ const BaitOverview: FC = () => {
         overflowY: "auto",
         border: "1px solid #ccc", // Optional: for better visibility
         padding: "10px",
-      }}>
+      }}
+    >
       {data.active_baits?.map((bait) => (
         <BaitEntry
           key={bait.id}

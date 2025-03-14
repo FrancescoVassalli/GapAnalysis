@@ -15,14 +15,25 @@ def adapt_chat_history_to_paragraph(chat: ChatHistory) -> str:
 
 
 def collect_chats_in_paragraph_format(session: Session, bait_id: int) -> str:
-    old_chats: List[ChatHistory] = (
-        session.query(ChatHistory).where(ChatHistory.bait_id == bait_id).all()
-    )
-    # the first chat is the bait email so I take that out here
-    old_chats.sort(key=lambda chat: chat.created_at)
-    old_chats.pop(0)
-    chat_paragraphs = [adapt_chat_history_to_paragraph(chat) for chat in old_chats]
-    return '\n'.join(chat_paragraphs)
+    old_chats: List[ChatHistory] = session.exec(
+        select(ChatHistory)
+        .where(ChatHistory.bait_id == bait_id)
+        .order_by(ChatHistory.created_at)
+        .offset(1)  # Skip the first chat
+    ).all()
+
+    # if no old_chats return empty string
+    if not old_chats:
+        return []
+
+    chat_paragraphs = [
+        {
+            "type": "user" if chat.sender == "user" else "assistant",
+            "message": chat.message,
+        }
+        for chat in old_chats
+    ]
+    return chat_paragraphs
 
 
 def add_interview_header(interview: str, bait_id: int) -> str:

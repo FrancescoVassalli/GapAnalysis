@@ -1,72 +1,89 @@
-import type { FC } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkBreaks from 'remark-breaks';
-import remarkGfm from 'remark-gfm';
+import type { FC, ReactNode } from "react";
+import React, { memo } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkBreaks from "remark-breaks";
+import remarkGfm from "remark-gfm";
 
 interface MessageProps {
-  type: 'user' | 'bot';
+  type: string;
   text: string;
-  enableMarkdown?: boolean;
 }
 
-const Message: FC<MessageProps> = ({ type, text, enableMarkdown }) => {
-  const isUser = type === 'user';
+interface CodeProps extends React.HTMLAttributes<HTMLElement> {
+  inline?: boolean;
+  className?: string;
+  children?: ReactNode;
+}
 
-  // Simple detection: if the text contains common markdown markers (headers, backticks, bold, etc.)
-  const detectMarkdown = (text: string): boolean =>
-    /(```|`|\*\*|\*|__|~~|^#+\s)/m.test(text);
-
-  // Determine whether to render using markdown.
-  // If enableMarkdown is undefined, then auto-detect based on the content.
-  const shouldRenderMarkdown =
-    enableMarkdown === undefined ? detectMarkdown(text) : enableMarkdown;
-
-  // Styling classes.
-  const containerClass = `flex items-start my-4 ${
-    !isUser ? 'flex-row-reverse' : ''
-  }`;
-  const avatarClass = `${isUser ? 'mr-2' : 'ml-2'} h-8 w-8 rounded-full`;
-  const avatarSrc = isUser
-    ? 'https://dummyimage.com/128x128/363536/ffffff&text=J'
-    : 'https://dummyimage.com/128x128/354ea1/ffffff&text=G';
-  const bubbleClass = `flex flex-col ${
-    isUser ? 'rounded-b-xl rounded-tr-xl' : 'rounded-b-xl rounded-tl-xl'
-  } bg-light-haze-50 dark:bg-dark-haze-800 p-4 sm:max-w-md md:max-w-2xl`;
-
-  // If markdown rendering is not enabled, simply render the text in a paragraph.
-  if (!shouldRenderMarkdown) {
-    return (
-      <div className={containerClass}>
-        <img
-          className={avatarClass}
-          src={avatarSrc}
-          alt={isUser ? 'User Avatar' : 'Bot Avatar'}
-        />
-        <div className={bubbleClass}>
-          <p className="whitespace-pre-line break-words">{text}</p>
+const CodeBlock: FC<CodeProps> = memo(
+  ({ inline, className, children, ...props }) => {
+    const content = children?.toString() || "";
+    if (inline) {
+      return (
+        <code className="bg-gray-100 p-1 rounded" {...props}>
+          {content}
+        </code>
+      );
+    }
+    if (className?.includes("language-markdown")) {
+      return (
+        <div className="prose max-w-full bg-gray-50 p-2 rounded overflow-x-auto">
+          <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+            {content}
+          </ReactMarkdown>
         </div>
-      </div>
+      );
+    }
+    return (
+      <pre className="bg-gray-100 p-2 rounded overflow-x-auto">
+        <code className={className}>{content}</code>
+      </pre>
     );
   }
+);
 
-  // Otherwise, render using ReactMarkdown with GFM and line breaks support.
+const Message: FC<MessageProps> = memo(({ type, text }) => {
+  const isUser = type === "user";
+
+  const containerClass = `flex items-start my-4 ${
+    !isUser ? "flex-row-reverse" : ""
+  }`;
+  const avatarClass = `${isUser ? "mr-2" : "ml-2"} h-8 w-8 rounded-full`;
+  const avatarSrc = isUser
+    ? "https://dummyimage.com/128x128/363536/ffffff&text=U"
+    : "https://dummyimage.com/128x128/354ea1/ffffff&text=AI";
+  const bubbleClass = `flex flex-col ${
+    isUser ? "rounded-b-xl rounded-tr-xl" : "rounded-b-xl rounded-tl-xl"
+  } bg-light-haze-50 dark:bg-dark-haze-800 p-4 sm:max-w-md md:max-w-2xl`;
+
   return (
     <div className={containerClass}>
       <img
         className={avatarClass}
         src={avatarSrc}
-        alt={isUser ? 'User Avatar' : 'Bot Avatar'}
+        alt={isUser ? "User Avatar" : "Bot Avatar"}
       />
       <div className={bubbleClass}>
         <ReactMarkdown
           remarkPlugins={[remarkGfm, remarkBreaks]}
           components={{
-            // Render paragraphs preserving newlines and wrapping long words.
-            p: ({ node, children, ...props }) => (
-              <p className="whitespace-pre-line break-words" {...props}>
-                {children}
-              </p>
-            ),
+            p: ({ node, children, ...props }) => {
+              // Combine text nodes for analysis.
+              const textContent = React.Children.toArray(children)
+                .filter((child) => typeof child === "string")
+                .join("");
+              // Apply extra margin only if there's at least one newline character.
+              const marginClass = textContent.includes("\n") ? "mb-6" : "mb-2";
+              return (
+                <p
+                  className={`whitespace-pre-wrap break-words ${marginClass}`}
+                  {...props}
+                >
+                  {children}
+                </p>
+              );
+            },
+            code: CodeBlock,
           }}
         >
           {text}
@@ -74,6 +91,6 @@ const Message: FC<MessageProps> = ({ type, text, enableMarkdown }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Message;
