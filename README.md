@@ -1,6 +1,30 @@
 # Gap Analysis
 
-A hackathon demo for finding gaps in coporate anit-phising processes.
+A hackathon demo for finding gaps in corporate anti-phising processes.
+
+<!-- add demo photo from docs/demo.webp -->
+<p align="center">
+  <img src="docs/demo.webp" alt="Demo">
+</p>
+
+## Table of Contents
+
+- [Getting Started](#getting-started)
+  - [Clone the Repository](#clone-the-repository)
+  - [Open in VS Code](#open-in-vs-code)
+- [Setup](#setup)
+  - [Environment Variables](#environment-variables)
+- [Important API Endpoints](#important-api-endpoints)
+- [Dev Container](#dev-container)
+  - [Prerequisites](#prerequisites)
+  - [Open the Dev Container](#open-the-dev-container)
+  - [Running Services](#running-services)
+  - [Setting up database](#setting-up-database)
+- [Deployment to Docker Containers](#deployment-to-docker-containers)
+  - [Building the API Docker Image](#building-the-api-docker-image)
+  - [Building the UI Docker Image](#building-the-ui-docker-image)
+  - [Deploying Docker Images](#deploying-docker-images)
+    - [Example Deployment to Cloud](#example-deployment-to-cloud)
 
 ## Getting Started
 
@@ -42,7 +66,28 @@ ENV=development
 
 FastAPI has a built in Swagger UI that can be accessed at `localhost:8000/docs` or `localhost:8000/redoc`
 
-TBD
+## Architecture Overview
+
+The project is structured as follows:
+
+- **Backend**: [FastAPI](https://fastapi.tiangolo.com/)
+  - Package Management: [Poetry](https://python-poetry.org/)
+  - ORM: [Alembic](https://alembic.sqlalchemy.org/)
+  - Formatting and Linting: [Black](https://black.readthedocs.io/en/stable/), [isort](https://pycqa.github.io/isort/)
+  - Testing: [Pytest](https://docs.pytest.org/en/7.0.x/)
+- **Frontend**: [React](https://reactjs.org/)
+  - Router: [TanStack Router](https://tanstack.com/router)
+  - State Management: [TanStack Query](https://tanstack.com/query)
+  - Styles: [Tailwind CSS](https://tailwindcss.com/)
+  - Icons: [Scarlab](https://scarlab-icons.la-moore.ru/)
+  - Formatting and Linting: [Biome](https://biomejs.dev/)
+- **Database**: [PostgreSQL](https://www.postgresql.org/)
+- **LLM Providers**: [OpenAI](https://openai.com/api/) and [Google Gemini](https://aistudio.google.com/welcome)
+- **Containerization**: [Docker](https://www.docker.com/)
+
+<p align="center">
+  <img src="docs/diagram.png" alt="Architecture Diagram">
+</p>
 
 ## Dev Container
 
