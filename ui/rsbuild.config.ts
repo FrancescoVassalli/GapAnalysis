@@ -19,6 +19,7 @@ export default defineConfig({
         new rspack.DefinePlugin({
           'process.env.API_URL': JSON.stringify(process.env.API_URL),
           'process.env.DEBUG': JSON.stringify(process.env.DEBUG),
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         }),
       ],
     },
